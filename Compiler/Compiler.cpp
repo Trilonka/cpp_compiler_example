@@ -3,8 +3,9 @@ using namespace std;
 #include <vector>
 #include <string>
 #include <stack>
-#include "../Parser/Parser.cpp"
 #include "CompilerCommands.cpp"
+#include "../Parser/Parser.cpp"
+#include <iostream>
 
 class Compiler {
     
