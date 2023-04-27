@@ -2,6 +2,126 @@
 #include <iostream>
 #include <vector>
 
+
+//Исключения
+class Exception : public exception
+{
+protected:
+    //сообщение об ошибке
+    char* str;
+public:
+
+    //Два конструктора принимают строку
+    Exception(const char* s)
+    {
+        str = new char[strlen(s) + 1];
+        strcpy_s(str, strlen(s) + 1, s);
+    }
+    Exception(char* s)
+    {
+        str = new char[strlen(s) + 1];
+        strcpy_s(str, strlen(s) + 1, s);
+    }
+
+    //Коструктор по умолчанию
+    Exception()
+    {
+        str = NULL;
+    }
+
+    //Конструктор копии
+    Exception(const Exception& e)
+    {
+        str = new char[strlen(e.str) + 1];
+        strcpy_s(str, strlen(e.str) + 1, e.str);
+    }
+
+    //Деструктор
+    ~Exception()
+    {
+        delete[] str;
+    }
+
+    virtual void print()
+    {
+        cout << "Exception: " << str << "; " << what();
+    }
+};
+
+class InvalidSyntax : public Exception {
+
+public:
+    InvalidSyntax() : Exception() {}
+
+    InvalidSyntax(char* s) : Exception(s) {}
+
+    InvalidSyntax(const char* s) : Exception(s) {}
+
+    InvalidSyntax(const InvalidSyntax& e) //Конструктор копии
+    {
+        str = new char[strlen(e.str) + 1];
+        strcpy_s(str, strlen(e.str) + 1, e.str);
+    }
+
+    virtual void print() {
+        cout << "InvalidSyntax : " << str << "; " << what() << "\n";
+    }
+};
+
+class SemiliconExpected : public InvalidSyntax {
+
+public:
+    SemiliconExpected(char* s) : InvalidSyntax(s){}
+
+    SemiliconExpected(const char* s) : InvalidSyntax(s){}
+
+    SemiliconExpected(const SemiliconExpected& e) //Конструктор копии
+    {
+        str = new char[strlen(e.str) + 1];
+        strcpy_s(str, strlen(e.str) + 1, e.str);
+    }
+
+    virtual void print() {
+        cout << "SemiliconExpected : " << str << "; " << what() << "\n";
+    }
+};
+
+class BraExpected : public InvalidSyntax {
+
+public:
+    BraExpected(char* s) : InvalidSyntax(s) {}
+
+    BraExpected(const char* s) : InvalidSyntax(s) {}
+
+    BraExpected(const BraExpected& e) //Конструктор копии
+    {
+        str = new char[strlen(e.str) + 1];
+        strcpy_s(str, strlen(e.str) + 1, e.str);
+    }
+
+    virtual void print() {
+        cout << "BraExpected : " << str << "; " << what() << "\n";
+    }
+};
+
+class ParExpected : public InvalidSyntax {
+
+public:
+    ParExpected(char* s) : InvalidSyntax(s) {}
+
+    ParExpected(const char* s) : InvalidSyntax(s) {}
+
+    ParExpected(const ParExpected& e) //Конструктор копии
+    {
+        str = new char[strlen(e.str) + 1];
+        strcpy_s(str, strlen(e.str) + 1, e.str);
+    }
+
+    virtual void print() {
+        cout << "ParExpected : " << str << "; " << what() << "\n";
+    }
+};
+
 class token {
 public:
     int kind;
@@ -128,10 +248,11 @@ public:
     node primary() {
 
         if (Lexer.Token.kind == Lexer.LPAR) {
-            node n(expression());
             Lexer.get_next_tok();
+            node n(expression());
+            //Lexer.get_next_tok();
             if (Lexer.Token.kind != Lexer.RPAR) {
-                cout << ") expected";
+                throw ParExpected(") expected");
             }
             Lexer.get_next_tok();
             return n;
@@ -147,7 +268,8 @@ public:
             return n;
         }
         else
-            cout << "Invalid expression syntax";
+            throw InvalidSyntax("Invalid expression syntax");
+            //cout << "Invalid expression syntax";
     };
 
     //выражения умножения и деления приориет 2
@@ -289,13 +411,15 @@ public:
     //условия циклов и ифов
     node condition() {
         if (Lexer.Token.kind != Lexer.LPAR)
-            cout << "( expected";
+            throw ParExpected("( expected");
+            //cout << "( expected";
 
         Lexer.get_next_tok();
         node n = orExp();
 
         if (Lexer.Token.kind != Lexer.RPAR)
-            cout << ") expected";
+            throw ParExpected(") expected");
+            //cout << ") expected";
 
         return n;
     };
@@ -303,18 +427,20 @@ public:
     //очередь выполняемых поддеревьев в различных statemant (операторах)
     node then() {
         if (Lexer.Token.kind != Lexer.LBRA)
-            cout << "{ expected";
+            throw BraExpected("{ expected");
+            //cout << "{ expected";
 
         node n(THEN);
 
         while (Lexer.Token.kind != Lexer.RBRA) {
             Lexer.get_next_tok();
 
-            if (Lexer.Token.kind == Lexer.RBRA) //тут надо доработать==============================================---------------------------------------------
-                break;
+            //if (Lexer.Token.kind == Lexer.RBRA) //тут надо доработать==============================================---------------------------------------------
+                //break;
 
             if (Lexer.Token.kind == Lexer.EOFF) //скобка не закрылась а код закончился
-                cout << "Invalid statement syntax";
+                throw InvalidSyntax("Invalid statement syntax");
+                //cout << "Invalid statement syntax";
 
             n.operators.push_back(statemant());
 
@@ -326,7 +452,7 @@ public:
     node statemant() {
 
         node n;
-        
+
         //раздел с ифом
         if (Lexer.Token.kind == Lexer.IF) { //нашли иф
             
@@ -345,7 +471,9 @@ public:
 
             Lexer.get_next_tok();
             if (Lexer.Token.kind != Lexer.SEMICOLON)
-                cout << "; expected";
+                throw SemiliconExpected("; expected");
+                //cout << "; expected";
+            Lexer.get_next_tok();
 
         }
         //раздел с циклом while
@@ -360,7 +488,9 @@ public:
 
             Lexer.get_next_tok();
             if (Lexer.Token.kind == Lexer.SEMICOLON)
-                cout << "; expected";
+                throw SemiliconExpected("; expected");
+                //cout << "; expected";
+            Lexer.get_next_tok();// ===========================================--------------------------------------
         }
         //раздел пустого узла
         else if (Lexer.Token.kind == Lexer.SEMICOLON) {
@@ -371,7 +501,10 @@ public:
             n.kind = EXPR;
             n.operators.push_back(expression());
             if (Lexer.Token.kind != Lexer.SEMICOLON)
-                cout << "; expected";
+                throw SemiliconExpected("; expected");
+                //cout << "; expected";
+            Lexer.get_next_tok(); // ==========================================--------------------------------
+
         }
 
         //остальные разделы
@@ -387,14 +520,15 @@ public:
 
         while (Lexer.Token.kind != Lexer.EOFF) {
             Lexer.get_next_tok();
-            if (Lexer.Token.kind == Lexer.EOFF)
-                break;
+            //if (Lexer.Token.kind == Lexer.EOFF)
+                //break;
             tree.operators.push_back(statemant());
             //надо добавить иключений
         }
 
         if (Lexer.Token.kind != Lexer.EOFF)
-            cout << "Invalid statement syntax";
+            throw InvalidSyntax("Invalid statement syntax");
+            //cout << "Invalid statement syntax";
 
         return tree;
 
@@ -425,21 +559,26 @@ public:
 };
 */
 
-void print(node root) {
+void print(node root, int &count, int &turn) {
 
     int i = 0;
     while (i != root.operators.size()) {
-        print(root.operators[i]);
+
+        count += 1;
+        print(root.operators[i], count, i);
         i += 1;
 
     }
-    
+    //root.print();
+    cout << "layer = " << count + 1 << " turn = " << turn + 1 << " : ";
     root.print();
+    
+    count -= 1;
 }
 
 int main()
 {
-
+    /*
     token a(3, 0);
     token b(9, 0);
     token c(1, 'a');
@@ -456,13 +595,29 @@ int main()
     token p(8, 0);
     token x(21, 0);
     token y(23, 0);
-    token z(21, 0);
-
-    vector<token> Lexems = { a, b, c, d, e, f, g, j, k, l ,m, n, o, p, x, y, z };
+    vector<token> Lexems = { a, b, c, d, e, f, g, j, k, l ,m, n, o, p, x, y};
+    */
+    
+    token a(1, 'b');
+    token b(22, 0);
+    token c(9, 0);
+    token d(2, '1');
+    token e(11, 0);
+    token f(2, '1');
+    token g(10, 0);
+    token j(13, 0);
+    token k(2, '2');
+    token l(21, 0);
+    token m(23, 0);
+    vector<token> Lexems = { a, b, c, d, e, f, g, j, k, l, m};
 
     Parser pars(Lexems);
-    
+
     cout << '\n';
-    print(pars.parce());
+    int count = 0;
+    int turn = 0;
+    print(pars.parce(), count, turn);
+
+    
 }
 
