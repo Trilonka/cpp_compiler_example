@@ -205,7 +205,7 @@ public:
     }
 
     void print() {
-        cout << kind << ' ' << value << endl;
+        cout << kind << ' ' << value;
     }
 
     ~node() {}
@@ -215,27 +215,27 @@ public:
 
 class Parser {
 public:
-    const int IntVAR = 1; //переменная
-    const int CONST = 2; //число
-    const int ADD = 3; //сумма +
-    const int SUB = 4; //разность -  
-    const int MULTI = 5; // *
-    const int DIV = 6; // /
-    const int LT = 7; //знак меньше <
-    const int BT = 8; // >
-    const int OR = 9; // or
-    const int AND = 10; //and
-    const int EQUAL = 11; // ==
-    const int UnEQUAL = 12; // !=
-    const int SET = 13; // =
-    const int IF = 14; // if
-    const int IfELSE = 15; //if - else
-    const int WHILE = 16; // while
-    const int DoWHILE = 17; //do{} while()
-    const int THEN = 18; //
-    const int EMPTY = 19; //пустой знак
-    const int EXPR = 20; //выражение
-    const int PROG = 21; //программа
+    static const int IntVAR = 1; //переменная
+    static const int CONST = 2; //число
+    static const int ADD = 3; //сумма +
+    static const int SUB = 4; //разность -  
+    static const int MULTI = 5; // *
+    static const int DIV = 6; // /
+    static const int LT = 7; //знак меньше <
+    static const int BT = 8; // >
+    static const int OR = 9; // or //miss
+    static const int AND = 10; //and //miss
+    static const int EQUAL = 11; // ==
+    static const int UnEQUAL = 12; // !=
+    static const int SET = 13; // =
+    static const int IF = 14; // if
+    static const int IfELSE = 15; //if - else
+    static const int WHILE = 16; // while
+    static const int DoWHILE = 17; //do{} while()
+    static const int THEN = 18; //
+    static const int EMPTY = 19; //пустой знак
+    static const int EXPR = 20; //выражение
+    static const int PROG = 21; //программа
 
     lexer Lexer;
 
@@ -366,7 +366,7 @@ public:
     node andExp() {
         node left = eqExp();
 
-        if (Lexer.Token.kind == Lexer.OR) {
+        if (Lexer.Token.kind == Lexer.AND) {
             node n(AND);
             n.operators.push_back(left);
             Lexer.get_next_tok();
@@ -537,27 +537,7 @@ public:
 };
 
 
-//------------------------------------------------
-/*
-class Compiler {
-public:
-    vector<int> programm;
-    int pc = 0;
 
-    Compiler() {
-
-    }
-};
-
-class VirtualeMachine {
-
-public:
-
-    void run(vector<int> programm) {
-
-    }
-};
-*/
 
 void print(node root, int &count, int &turn) {
 
@@ -610,6 +590,17 @@ int main()
     token l(21, 0);
     token m(23, 0);
     vector<token> Lexems = { a, b, c, d, e, f, g, j, k, l, m};
+
+    // token a(1, 'a');
+    // token b(13, 0);
+    // token c(2, 43);
+    // token cc(21, 0);
+    // token d(1, 'b');
+    // token e(13, 0);
+    // token f(2, 77);
+    // token ff(21, 0);
+
+    // vector<token> Lexems = { a, b, c, cc, d, e, f, ff };
 
     Parser pars(Lexems);
 
