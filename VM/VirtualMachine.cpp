@@ -1,6 +1,6 @@
 using namespace std;
 
-#include "../Parser/Parser.cpp"
+#include "iostream"
 #include "../Compiler/CompilerCommands.cpp"
 #include <vector>
 #include <string>
