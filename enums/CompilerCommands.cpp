@@ -2,7 +2,7 @@
 
 #define _OPERATION_TYPE
 
-enum OperationType {
+enum class OperationType {
     FETCH,
     STORE,
     PUSH,
