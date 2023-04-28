@@ -109,8 +109,8 @@ public:
 		{
 			if (lexems[i - 1].kind >= TokenType::INT && lexems[i - 1].kind <= TokenType::STRING)
 			{
-				//identifiers.insert(src[i]);
-				//add_token(i, TokenType::VAR, src); return;
+				identifiers.insert(src[i]);
+				add_token(i, TokenType::VAR, src); return;
 			}
 
 			if (lexems[i - 1].kind == TokenType::QUOTE || lexems[i - 1].kind == TokenType::CHARACTER)

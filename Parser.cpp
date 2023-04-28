@@ -129,7 +129,7 @@ public:
     Node eqExp() {
         Node left = logicExp();
 
-        if (token.kind == TokenType::EQUAL) {
+        if (token.kind == TokenType::ASSIGMENT) {
             Node n(NodeType::EQUAL);
             n.operators.push_back(left);
             get_next_token();
@@ -304,7 +304,11 @@ public:
 
         while (tokenIndex < tokens.size()) {
             get_next_token();
-            tree.operators.push_back(statemant());
+            if (token.kind == TokenType::INT || token.kind == TokenType::BOOL) {
+                continue;
+            } else {
+                tree.operators.push_back(statemant());
+            }
         }
 
         if (token.kind != TokenType::EOFF)
