@@ -28,7 +28,8 @@ public:
 
     Parser(vector<Token> tokens) {
         this->tokens = tokens;
-        cout << "Parcer created";
+        Token EOFF(TokenType::EOFF, "");
+        this->tokens.push_back(EOFF);
     }
 
     //Первичные выражения - приоритет 1
@@ -72,6 +73,7 @@ public:
             if (token.kind != TokenType::VAR)
                 throw InvalidSyntax("Invalid Initialization syntax");
             n.value = token.value;
+            get_next_token();
             return n;
         }
         else if (token.kind == TokenType::BOOL) {
@@ -80,6 +82,7 @@ public:
             if (token.kind != TokenType::VAR)
                 throw InvalidSyntax("Invalid Initialization syntax");
             n.value = token.value;
+            get_next_token();
             return n;
         }
         else if (token.kind == TokenType::STRING) {
@@ -88,6 +91,7 @@ public:
             if (token.kind != TokenType::VAR)
                 throw InvalidSyntax("Invalid Initialization syntax");
             n.value = token.value;
+            get_next_token();
             return n;
         }
         else if (token.kind == TokenType::CHAR) {
@@ -96,6 +100,7 @@ public:
             if (token.kind != TokenType::VAR)
                 throw InvalidSyntax("Invalid Initialization syntax");
             n.value = token.value;
+            get_next_token();
             return n;
         }
         //ПРОСТО ПЕРЕМЕННАЯ=================----------------------------
@@ -178,7 +183,7 @@ public:
     Node eqExp() {
         Node left = logicExp();
 
-        if (token.kind == TokenType::ASSIGMENT) {
+        if (token.kind == TokenType::EQUAL) {
             Node n(NodeType::EQUAL);
             n.operators.push_back(left);
             get_next_token();
@@ -266,8 +271,9 @@ public:
 
         Node n(NodeType::THEN);
 
+        get_next_token();
         while (token.kind != TokenType::RBRA) {
-            get_next_token();
+            //get_next_token();
 
             //if (token.kind == TokenType::RBRA) //тут надо доработать==============================================---------------------------------------------
                 //break;
@@ -343,20 +349,18 @@ public:
     }
 
     Node parse() {
-        Node tree(NodeType::PROG, "");
 
-        while (tokenIndex < tokens.size()) {
-            get_next_token();
-            if (token.kind == TokenType::INT || token.kind == TokenType::BOOL) {
-                continue;
-            } else {
-                tree.operators.push_back(statemant());
-            }
+        Node tree(NodeType::PROG, "");
+        get_next_token();
+
+        while (token.kind != TokenType::EOFF) {
+            tree.operators.push_back(statemant());
         }
 
         if (token.kind != TokenType::EOFF)
             throw InvalidSyntax("Invalid statement syntax");
 
+        tokenIndex = 0;
         return tree;
     }
 
@@ -364,5 +368,26 @@ public:
         token = tokens[tokenIndex++];
     }
 };
+
+//печать итога парсинга
+inline void print(Node root, int& count, int& turn) {
+
+    int i = 0;
+
+    while (i != root.operators.size()) {
+
+        count += 1;
+        print(root.operators[i], count, i);
+
+        i += 1;
+        if (i == root.operators.size()) cout << "|\n|\n|\n*";
+
+    }
+    //root.print();
+    cout << "layer = " << count + 1 << " turn = " << turn + 1 << " : ";
+    root.print();
+
+    count -= 1;
+}
 
 #endif

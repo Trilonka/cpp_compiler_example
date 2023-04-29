@@ -27,6 +27,7 @@ enum class TokenType {
 		PLUS,		// +
 		MINUS,		// -
 		ASSIGMENT,	// =
+		UNEQUAL,    // != ---------------------------ДОПИСАТЬ
 		EQUAL,		// ==
 		NOT,		// !
 		SEMICOLON,	// ;
@@ -45,7 +46,7 @@ enum class TokenType {
 		MULTI,
 		DIV,
 		MORE,
-		UNEQUAL,
+		
 		OR,
 		AND,
 		EOFF

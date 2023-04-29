@@ -21,7 +21,7 @@ public:
     }
 
     void print() {
-        std::cout << int(kind) << ' ' << value;
+        std::cout << int(kind) << ' ' << value << "\n\n";
     }
 
     ~Node() {}
