@@ -363,7 +363,7 @@ public:
         while (token.kind != TokenType::EOFF) {
             tree.operators.push_back(statemant());
         }
-        }
+        
 
         if (token.kind != TokenType::EOFF)
             throw InvalidSyntax("Invalid statement syntax");
