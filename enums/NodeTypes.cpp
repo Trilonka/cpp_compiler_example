@@ -5,6 +5,14 @@
 enum class NodeType {
     VAR,
     INT,
+    BOOL,//
+    STRING,//
+    CHAR,//
+    REAL,//
+    CONSTINT,//
+    CONSTCHAR,//
+    CONSTSTRING,//
+    CONSTREAL,//
     PLUS,
     MINUS,
     MULTI,

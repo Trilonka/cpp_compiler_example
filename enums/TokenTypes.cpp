@@ -9,11 +9,14 @@ enum class TokenType {
 		// TYPE
 		NUMBER,
 		CHARACTER,
+		REAL, //----
+		CONSTSTRING,  //-----
 
 		// VALUE
 		INT,		// int
 		BOOL,		// bool
 		STRING,		// string
+		CHAR, //-----
 
 		// SYMBOLS
 		LPAR,		// (

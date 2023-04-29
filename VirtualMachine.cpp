@@ -131,8 +131,8 @@ public:
             if (op == int(OperationType::HALT)) break;
         }
         cout << "Execution finished. Vars:\n";
-        for (const auto & [key, value] : vars) {
-            cout << char(key) << " = " << value << "\n";
-        }
+        //for (const auto & [key, value] : vars) {
+            //cout << char(key) << " = " << value << "\n";
+        //}
     };
 };

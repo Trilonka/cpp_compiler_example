@@ -44,11 +44,61 @@ public:
             get_next_token();
             return n;
         }
+        //КОНСТАНТНЫЕ ЗНАЧЕНИЯ================------------------------
         else if (token.kind == TokenType::NUMBER) {
-            Node n(NodeType::INT, token.value);
+            Node n(NodeType::CONSTINT, token.value);
             get_next_token();
             return n;
         }
+        else if (token.kind == TokenType::CHARACTER) {
+            Node n(NodeType::CONSTCHAR, token.value);
+            get_next_token();
+            return n;
+        }
+        else if (token.kind == TokenType::REAL) {
+            Node n(NodeType::CONSTREAL, token.value);
+            get_next_token();
+            return n;
+        }
+        else if (token.kind == TokenType::CONSTSTRING) {
+            Node n(NodeType::CONSTSTRING, token.value);
+            get_next_token();
+            return n;
+        }
+        //ПЕРЕМЕННЫЕ И ИХ ОБЪЯВЛЕНИЕ================------------------------
+        else if (token.kind == TokenType::INT) {
+            Node n(NodeType::INT);
+            get_next_token();
+            if (token.kind != TokenType::VAR)
+                throw InvalidSyntax("Invalid Initialization syntax");
+            n.value = token.value;
+            return n;
+        }
+        else if (token.kind == TokenType::BOOL) {
+            Node n(NodeType::BOOL);
+            get_next_token();
+            if (token.kind != TokenType::VAR)
+                throw InvalidSyntax("Invalid Initialization syntax");
+            n.value = token.value;
+            return n;
+        }
+        else if (token.kind == TokenType::STRING) {
+            Node n(NodeType::STRING);
+            get_next_token();
+            if (token.kind != TokenType::VAR)
+                throw InvalidSyntax("Invalid Initialization syntax");
+            n.value = token.value;
+            return n;
+        }
+        else if (token.kind == TokenType::CHAR) {
+            Node n(NodeType::CHAR);
+            get_next_token();
+            if (token.kind != TokenType::VAR)
+                throw InvalidSyntax("Invalid Initialization syntax");
+            n.value = token.value;
+            return n;
+        }
+        //ПРОСТО ПЕРЕМЕННАЯ=================----------------------------
         else if (token.kind == TokenType::VAR) {
             Node n(NodeType::VAR, token.value);
             get_next_token();
@@ -56,7 +106,6 @@ public:
         }
         else
             throw InvalidSyntax("Invalid expression syntax");
-            //cout << "Invalid expression syntax";
     };
 
     //выражения умножения и деления приориет 2
@@ -199,14 +248,12 @@ public:
     Node condition() {
         if (token.kind != TokenType::LPAR)
             throw ParExpected("( expected");
-            //cout << "( expected";
 
         get_next_token();
         Node n = orExp();
 
         if (token.kind != TokenType::RPAR)
             throw ParExpected(") expected");
-            //cout << ") expected";
 
         return n;
     };
@@ -227,7 +274,6 @@ public:
 
             if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
                 throw InvalidSyntax("Invalid statement syntax");
-                //cout << "Invalid statement syntax";
 
             n.operators.push_back(statemant());
 
@@ -259,7 +305,6 @@ public:
             get_next_token();
             if (token.kind != TokenType::SEMICOLON)
                 throw SemiliconExpected("; expected");
-                //cout << "; expected";
             get_next_token();
 
         }
@@ -276,7 +321,6 @@ public:
             get_next_token();
             if (token.kind == TokenType::SEMICOLON)
                 throw SemiliconExpected("; expected");
-                //cout << "; expected";
             get_next_token();// ===========================================--------------------------------------
         }
         //раздел пустого узла
@@ -289,7 +333,6 @@ public:
             n.operators.push_back(expression());
             if (token.kind != TokenType::SEMICOLON)
                 throw SemiliconExpected("; expected");
-                //cout << "; expected";
             get_next_token(); // ==========================================--------------------------------
 
         }
@@ -313,7 +356,6 @@ public:
 
         if (token.kind != TokenType::EOFF)
             throw InvalidSyntax("Invalid statement syntax");
-            //cout << "Invalid statement syntax";
 
         return tree;
     }
