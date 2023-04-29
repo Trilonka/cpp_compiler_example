@@ -5,6 +5,14 @@
 enum class NodeType {
     VAR,
     INT,
+    BOOL,//
+    STRING,//
+    CHAR,// 4
+    REAL,//
+    CONSTINT,//6
+    CONSTCHAR,//
+    CONSTSTRING,//
+    CONSTREAL,// 9
     PLUS,
     MINUS,
     MULTI,
@@ -15,15 +23,15 @@ enum class NodeType {
     AND,
     EQUAL,
     UNEQUAL,
-    SET,
-    IF,
+    SET, //20
+    IF, //21
     IFELSE,
     WHILE,
     DOWHILE,
-    THEN,
+    THEN,//25
     EMPTY,
-    EXPR,
-    PROG
+    EXPR,//27
+    PROG//28
 };
 
 #endif

@@ -15,13 +15,13 @@ public:
     NodeType kind;
     std::vector<Node> operators;
 
-    Node(NodeType Kind = NodeType::EMPTY, string val = "") {
+    Node(NodeType Kind = NodeType::EMPTY, std::string val = "") {
         kind = Kind;
         value = val;
     }
 
     void print() {
-        std::cout << int(kind) << ' ' << value;
+        std::cout << int(kind) << ' ' << value << "\n\n";
     }
 
     ~Node() {}
