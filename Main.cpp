@@ -10,7 +10,6 @@ using namespace std;
 #include "Compiler.cpp"
 #include "VirtualMachine.cpp"
 
-
 int main(int argc, char *argv[])
 {
     char *fileName = argv[1];
@@ -19,8 +18,9 @@ int main(int argc, char *argv[])
     // std::string userProgram((std::istreambuf_iterator<char>(file)),
     //              std::istreambuf_iterator<char>());
 
-    //std::string userProgram = "int a = 3; int b = 4; a = a + b;";
-    std::string userProgram = "int a = 3; if(a < 2){a = a + 1; int b = 4; b = a + b;};";
+    // std::string userProgram = "int a = 3; int b = 4; a = a + b;";
+    // std::string userProgram = "int a = 1; if(a < 6){a = a + 2; int b = 4; a = a + b;}; if (a > 2){a = 3;};";
+    std::string userProgram = "int a = 2; if (a < 6) {int a = a + 3;};";
 
     cout << userProgram << "\n\n\n\n";
 
@@ -39,5 +39,6 @@ int main(int argc, char *argv[])
     print(parser.parse(), count, turn);
     cout << "Parser tree ending >>>>>>>>\n\n";
 
-    vm.run(compiler.compile(parser.parse()));
+    compiler.compile(parser.parse());
+    vm.run(compiler.program);
 }

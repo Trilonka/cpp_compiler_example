@@ -122,14 +122,14 @@ public:
             Node n(NodeType::MULTI);
             n.operators.push_back(left);
             get_next_token();
-            n.operators.push_back(primary());
+            n.operators.push_back(multiplicator());
             return n;
         }
         else if (token.kind == TokenType::DIV) {
             Node n(NodeType::DIV);
             n.operators.push_back(left);
             get_next_token();
-            n.operators.push_back(primary());
+            n.operators.push_back(multiplicator());
             return n;
         }
         else
@@ -144,14 +144,14 @@ public:
             Node n(NodeType::PLUS);
             n.operators.push_back(left);
             get_next_token();
-            n.operators.push_back(multiplicator());
+            n.operators.push_back(summator());
             return n;
         }
         else if (token.kind == TokenType::MINUS) {
             Node n(NodeType::MINUS);
             n.operators.push_back(left);
             get_next_token();
-            n.operators.push_back(multiplicator());
+            n.operators.push_back(summator());
             return n;
         }
         else
@@ -330,7 +330,7 @@ public:
             n.operators.push_back(then());
 
             get_next_token();
-            if (token.kind == TokenType::SEMICOLON)
+            if (token.kind != TokenType::SEMICOLON)
                 throw SemiliconExpected("; expected");
                 //cout << "; expected";
             get_next_token();// ===========================================--------------------------------------
