@@ -31,7 +31,7 @@ public:
 	~Lexer() { }
 
 	// делит код на токены и формирует lexems
-	std::vector<std::string>& tokenize()
+	std::vector<std::string> tokenize()
 	{
 		std::vector<std::string> res;
 		std::regex regular("([\\w]+)|([\\W])");
@@ -87,6 +87,8 @@ public:
 			if (src[i] == "<") add_token(i, TokenType::LESS, src);
 			if (src[i] == "+") add_token(i, TokenType::PLUS, src);
 			if (src[i] == "-") add_token(i, TokenType::MINUS, src);
+			if (src[i] == "*") add_token(i, TokenType::MULTI, src);
+			if (src[i] == "/") add_token(i, TokenType::DIV, src);
 			if (src[i] == "=") add_token(i, TokenType::ASSIGMENT, src);
 			if (src[i] == "==") add_token(i, TokenType::EQUAL, src);
 			if (src[i] == "!") add_token(i, TokenType::NOT, src);

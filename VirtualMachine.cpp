@@ -6,133 +6,167 @@ using namespace std;
 #include <string>
 #include <stack>
 #include <map>
+#include "Variable.cpp"
+#include "Calculations.cpp"
+#include "types/Obj.cpp"
 
 class VirtualMachine {
+private:
 public:
 
-    void run(vector<int> program) {
+    map<string, string> vars;
+    stack<string> stack;
 
-        map<int, int> vars;
-        stack<int> stack;
+    void run(vector<string> program) {
+
+        cout << "VM started\n";
         int pc = 0;
         
         while (true) {
 
-            int op = program[pc];
-            int arg;
+            OperationType op = operationNamesStr[program[pc]];
+            string arg;
 
             if (pc < program.size()-1) {
                 arg = program[pc+1];
             }
 
-            if (op == int(OperationType::FETCH)) {
-                if (vars.find(arg) == vars.end()) {
-                    cout << "Variable {" << char(arg) << "} not exists!\n";
-                    exit(1);
-                }
+            if (op == OperationType::FETCHNEW) {
+                fetch_new(arg);
+                pc += 2;
+            }
+            if (op == OperationType::FETCH) {
                 stack.push(vars[arg]);
                 pc += 2;
             }
-            if (op == int(OperationType::STORE)) {
-                vars[arg] = stack.top();
-                stack.pop();
+            if (op == OperationType::UNFETCH) {
+                vars.erase(arg);
                 pc += 2;
             }
-            if (op == int(OperationType::PUSH)) {
+            if (op == OperationType::STORE) {
+                if (arg == "FETCH") {
+                    if (stack.top().substr(0, stack.top().find(" ")) != vars[program[pc+2]].substr(0, vars[program[pc+2]].find(" "))) {
+                        cout << "Wrong typesss!\n";
+                        exit(1);
+                    }
+                    vars[program[pc+2]] = stack.top();
+                } else if (arg == "FETCHNEW") {
+                    if (stack.top().substr(0, stack.top().find(" ")) != program[pc+2].substr(0, program[pc+2].find(" "))) {
+                        cout << "Wrong types!\n";
+                        exit(1);
+                    }
+                    vars[program[pc+2].substr(program[pc+2].find(" ")+1)] = stack.top();
+                }
+                stack.pop();
+                pc += 3;
+            }
+            if (op == OperationType::PUSH) {
                 stack.push(arg);
                 pc += 2;
             }
-            if (op == int(OperationType::POP)) {
+            if (op == OperationType::POP) {
                 pc += 1;
             }
-            if (op == int(OperationType::ADD)) {
-                int second = stack.top(); stack.pop();
-                int first = stack.top(); stack.pop();
-                stack.push(first + second);
+            if (op == OperationType::ADD) {
+                string second = stack.top(); stack.pop();
+                string first = stack.top(); stack.pop();
+                stack.push(sum(first, second)->toStore()); // TODO?
                 pc += 1;
             }
-            if (op == int(OperationType::SUB)) {
-                int second = stack.top(); stack.pop();
-                int first = stack.top(); stack.pop();
-                stack.push(first - second);
+            if (op == OperationType::SUB) {
+                string second = stack.top(); stack.pop();
+                string first = stack.top(); stack.pop();
+                stack.push(sub(first, second)->toStore()); // TODO?
                 pc += 1;
             }
-            if (op == int(OperationType::MULTI)) {
-                int second = stack.top(); stack.pop();
-                int first = stack.top(); stack.pop();
-                stack.push(first * second);
+            if (op == OperationType::MULTI) {
+                string second = stack.top(); stack.pop();
+                string first = stack.top(); stack.pop();
+                stack.push(mul(first, second)->toStore()); // TODO?
                 pc += 1;
             }
-            if (op == int(OperationType::DIV)) {
-                int second = stack.top(); stack.pop();
-                int first = stack.top(); stack.pop();
-                stack.push(first / second);
+            if (op == OperationType::DIV) {
+                string second = stack.top(); stack.pop();
+                string first = stack.top(); stack.pop();
+                stack.push(div(first, second)->toStore()); // DIV?
                 pc += 1;
             }
-            if (op == int(OperationType::LT)) {
-                int second = stack.top(); stack.pop();
-                int first = stack.top(); stack.pop();
-                if (first < second) {
-                    stack.push(1);
+            if (op == OperationType::LT) {
+                string second = stack.top(); stack.pop();
+                string first = stack.top(); stack.pop();
+                if (first < second) { // TODO
+                    stack.push("true");
                 } else {
-                    stack.push(0);
+                    stack.push("false");
                 }
                 pc += 1;
             }
-            if (op == int(OperationType::BT)) {
-                int second = stack.top(); stack.pop();
-                int first = stack.top(); stack.pop();
-                if (first > second) {
-                    stack.push(1);
+            if (op == OperationType::BT) {
+                string second = stack.top(); stack.pop();
+                string first = stack.top(); stack.pop();
+                if (first > second) { // TODO
+                    stack.push("true");
                 } else {
-                    stack.push(0);
+                    stack.push("false");
                 }
                 pc += 1;
             }
-            if (op == int(OperationType::EQUAL)) {
-                int second = stack.top(); stack.pop();
-                int first = stack.top(); stack.pop();
+            if (op == OperationType::EQUAL) {
+                string second = stack.top(); stack.pop();
+                string first = stack.top(); stack.pop();
                 if (first == second) {
-                    stack.push(1);
+                    stack.push("true");
                 } else {
-                    stack.push(0);
+                    stack.push("false");
                 }
                 pc += 1;
             }
-            if (op == int(OperationType::NONEQUAL)) {
-                int second = stack.top(); stack.pop();
-                int first = stack.top(); stack.pop();
+            if (op == OperationType::NONEQUAL) {
+                string second = stack.top(); stack.pop();
+                string first = stack.top(); stack.pop();
                 if (first != second) {
-                    stack.push(1);
+                    stack.push("true");
                 } else {
-                    stack.push(0);
+                    stack.push("false");
                 }
                 pc += 1;
             }
-            if (op == int(OperationType::JZ)) {
-                if (stack.top() == 0) {
-                    pc = arg;
+            if (op == OperationType::JZ) {
+                if (stack.top() == "false") {
+                    pc = stoi(arg);
                 } else {
                     pc += 2;
                 }
-                break;
             }
-            if (op == int(OperationType::JNZ)) {
-                if (stack.top() == 1) {
-                    pc = arg;
+            if (op == OperationType::JNZ) {
+                if (stack.top() == "true") {
+                    pc = stoi(arg);
                 } else {
                     pc += 2;
                 }
-                break;
             }
-            if (op == int(OperationType::JMP)) {
-                pc = arg;
+            if (op == OperationType::JMP) {
+                pc = stoi(arg);
             }
-            if (op == int(OperationType::HALT)) break;
+            if (op == OperationType::HALT) break;
         }
         cout << "Execution finished. Vars:\n";
-        //for (const auto & [key, value] : vars) {
-            //cout << char(key) << " = " << value << "\n";
-        //}
+
+        map<string, string>::iterator it;
+        for (it = vars.begin(); it != vars.end(); it++)
+        {
+            std::cout << it->first    // string (key)
+                    << " : "
+                    << it->second   // string's value 
+                    << std::endl;
+        }
     };
+
+    void fetch_new(string &arg) {
+        string type = arg.substr(0, arg.find(" "));
+        string name = arg.substr(arg.find(" ")+1);
+        string value = type + " " + init_value(type);
+        stack.push(value);
+        vars[name] = value;
+    }
 };
