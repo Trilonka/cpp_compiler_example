@@ -20,7 +20,8 @@ int main(int argc, char *argv[])
     //              std::istreambuf_iterator<char>());
 
     //std::string userProgram = "int a = 3; int b = 4; a = a + b;";
-    std::string userProgram = "int a = 3; if(a < 2){a = a + 1; int b = 4; b = a + b;};";
+    //std::string userProgram = "int a = 3; if(a < 2){a = a + 1; int b = 4; b = a + b;};";
+    std::string userProgram = "int a = 1; while(a<6){a=a+1;};";
 
     cout << userProgram << "\n\n\n\n";
 

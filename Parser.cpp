@@ -330,7 +330,7 @@ public:
             n.operators.push_back(then());
 
             get_next_token();
-            if (token.kind == TokenType::SEMICOLON)
+            if (token.kind != TokenType::SEMICOLON)
                 throw SemiliconExpected("; expected");
                 //cout << "; expected";
             get_next_token();// ===========================================--------------------------------------
