@@ -4,7 +4,6 @@
 
 #include "Exception.cpp"
 
-// встретили кракозябру, не можем понять кто это 
 class UnknownSymbolException : public Exception
 {
 protected:
