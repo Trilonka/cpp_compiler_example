@@ -31,14 +31,14 @@ int main(int argc, char *argv[])
     cout << "<<<< lexer good >>>>\n\n";
 
     Parser parser(lexer.lexems);
-    Compiler compiler;
-    VirtualMachine vm;
+    //Compiler compiler;
+    //VirtualMachine vm;
 
     cout << "<<<<<< Parser tree:\n\n";
     int count = 0; int turn = 0;
     print(parser.parse(), count, turn);
     cout << "Parser tree ending >>>>>>>>\n\n";
 
-    compiler.compile(parser.parse());
-    vm.run(compiler.program);
+    //compiler.compile(parser.parse());
+    //vm.run(compiler.program);
 }

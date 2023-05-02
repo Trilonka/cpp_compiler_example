@@ -2,6 +2,8 @@
 
 #define _EXCEPTION_LEXER
 
+
+
 #include "Exception.cpp"
 
 // встретили кракозябру, не можем понять кто это 

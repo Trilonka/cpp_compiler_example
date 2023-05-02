@@ -1,4 +1,5 @@
-﻿#ifndef _PARSER
+﻿
+#ifndef _PARSER
 
 #define _PARSER
 

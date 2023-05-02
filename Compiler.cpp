@@ -1,3 +1,5 @@
+
+
 #ifndef _COMPILER
 
 #define _COMPILER
@@ -5,7 +7,7 @@
 using namespace std;
 
 #include <vector>
-#include <string>
+//#include <string>
 #include <stack>
 #include "enums/CompilerCommands.cpp"
 #include "Parser.cpp"
@@ -13,7 +15,7 @@ using namespace std;
 #include "Node.cpp"
 #include "enums/NodeTypes.cpp"
 #include "Variable.cpp"
-#include <map>
+//#include <map>
 #include <set>
 #include "exception/CompilerExceptions.cpp"
 
