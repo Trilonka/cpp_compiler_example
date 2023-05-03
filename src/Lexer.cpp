@@ -5,54 +5,109 @@ Lexer::Lexer(std::string src) { source = src; }
 
 Lexer::~Lexer() { }
 
-// делит код на токены и формирует lexems
+// РґРµР»РёС‚ РєРѕРґ РЅР° С‚РѕРєРµРЅС‹ Рё С„РѕСЂРјРёСЂСѓРµС‚ lexems
 std::vector<std::string> Lexer::tokenize()
 {
 	std::vector<std::string> res;
-	std::regex regular("([\\w]+)|([\\W])");
+	std::regex regular("('.')|([\"]([\\w]*[\\W]*)*[\"])|([\\w]+[.][\\w]+)|([\\w]+)|([\\W])");
 
 	std::sregex_token_iterator iter(source.begin(), source.end(), regular);
 	std::sregex_token_iterator end;
 
-	for (int i = 0; iter != end; ++iter, ++i) {
-
+	for (int i = 0; iter != end; ++iter, ++i)
+	{
 		if (*iter != " ")
 		{
 			res.push_back(*iter);
 			kind_token(res.size() - 1, res);
 		}
 
-		// когда встречается неизвестный символ
+		// РєРѕРіРґР° РІСЃС‚СЂРµС‡Р°РµС‚СЃСЏ РЅРµРёР·РІРµСЃС‚РЅС‹Р№ СЃРёРјРІРѕР»
 		if (res.size() - 1 == this->lexems.size())
 		{
 			throw UnknownSymbolException("An unexpected symbol was encountered", res[res.size() - 1]);
 		}
 	}
 
+	Token current(TokenType::EOFF, "/eof");
+	lexems.push_back(current);
+
 	return res;
 }
 
-// создает новый токен 
+// СЃРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ С‚РѕРєРµРЅ
 void Lexer::add_token(int _i, TokenType _kind, std::vector<std::string>& _src)
 {
 	Token current(_kind, _src[_i]);
 	lexems.push_back(current);
 }
 
-// определяет вид токена
+// РѕРїСЂРµРґРµР»СЏРµС‚ РІРёРґ С‚РѕРєРµРЅР°
 void Lexer::kind_token(int i, std::vector<std::string>& src)
 {
-	std::regex regular("([\\W])");
-
 	if (IS_TYPE(src[i]))
 	{
 		if (src[i] == "int") add_token(i, TokenType::INT, src);
 		if (src[i] == "bool") add_token(i, TokenType::BOOL, src);
 		if (src[i] == "string") add_token(i, TokenType::STRING, src);
+		if (src[i] == "char") add_token(i, TokenType::CHAR, src);
 
 		return;
 	}
 
+	std::regex regular("('.')");
+	if (regex_search(src[i], regular))
+	{
+		src[i].erase(src[i].begin());
+		src[i].erase(src[i].end() - 1);
+		add_token(i, TokenType::CHARACTER, src);
+
+		return;
+	}
+
+	regular = ("[\"]([\\w]*[\\W]*)*[\"]");
+	if (regex_search(src[i], regular))
+	{
+		src[i].erase(src[i].begin());
+		src[i].erase(src[i].end() - 1);
+		add_token(i, TokenType::CONSTSTRING, src);
+
+		return;
+	}
+
+	regular = ("^[\\d]+[.][\\d]+");
+	if (regex_search(src[i], regular))
+	{
+		if ((this->lexems[i - 1].kind == TokenType::MINUS) &&
+			(this->lexems[i - 2].kind > TokenType::CHAR && this->lexems[i - 2].kind < TokenType::IF))
+		{
+			lexems.pop_back();
+			src[i] = src[i - 1] + src[i];
+			add_token(i, TokenType::REAL, src);
+			src.erase(src.begin() + i - 1);
+		}
+		else add_token(i, TokenType::REAL, src);
+
+		return;
+	}
+
+	regular = ("^[\\d]+");
+	if (regex_search(src[i], regular))
+	{
+		if ((this->lexems[i - 1].kind == TokenType::MINUS) &&
+			(this->lexems[i - 2].kind > TokenType::CHAR && this->lexems[i - 2].kind < TokenType::IF))
+		{
+			lexems.pop_back();
+			src[i] = src[i - 1] + src[i];
+			add_token(i, TokenType::NUMBER, src);
+			src.erase(src.begin() + i - 1);
+		}
+		else add_token(i, TokenType::NUMBER, src);
+
+		return;
+	}
+
+	regular = ("[\\W]");
 	if (regex_search(src[i], regular))
 	{
 		if (src[i] == "(") add_token(i, TokenType::LPAR, src);
@@ -60,39 +115,43 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 		if (src[i] == "{") add_token(i, TokenType::LBRA, src);
 		if (src[i] == "}") add_token(i, TokenType::RBRA, src);
 		if (src[i] == "<") add_token(i, TokenType::LESS, src);
+		if (src[i] == ">") add_token(i, TokenType::MORE, src);
 		if (src[i] == "+") add_token(i, TokenType::PLUS, src);
 		if (src[i] == "-") add_token(i, TokenType::MINUS, src);
 		if (src[i] == "*") add_token(i, TokenType::MULTI, src);
 		if (src[i] == "/") add_token(i, TokenType::DIV, src);
-		if (src[i] == "=") add_token(i, TokenType::ASSIGMENT, src);
-		if (src[i] == "==") add_token(i, TokenType::EQUAL, src);
 		if (src[i] == "!") add_token(i, TokenType::NOT, src);
 		if (src[i] == ";") add_token(i, TokenType::SEMICOLON, src);
-		if (src[i] == "'") add_token(i, TokenType::QUOTE, src);
+		if (src[i] == ",") add_token(i, TokenType::COMMA, src);
+
+		if (src[i] == "=") {
+			if (src[i - 1] == "=")
+			{
+				lexems.pop_back();
+				src[i] = src[i - 1] + src[i];
+				add_token(i, TokenType::EQUAL, src);
+				src.erase(src.begin() + i - 1);
+			}
+			else if (src[i - 1] == "!")
+			{
+				lexems.pop_back();
+				src[i] = src[i - 1] + src[i];
+				add_token(i, TokenType::UNEQUAL, src);
+				src.erase(src.begin() + i - 1);
+			}
+			else add_token(i, TokenType::ASSIGMENT, src);
+		}
 
 		return;
 	}
 
-	regular = ("([\\d]+)");
-
-	if (regex_search(src[i], regular))
-	{
-		add_token(i, TokenType::NUMBER, src); return;
-	}
-
-	regular = ("([\\w]+)");
-
+	regular = ("[\\w]+[\\d]*");
 	if ((i > 0) && (regex_search(src[i], regular)))
 	{
-		if (lexems[i - 1].kind >= TokenType::INT && lexems[i - 1].kind <= TokenType::STRING)
+		if (lexems[i - 1].kind >= TokenType::INT && lexems[i - 1].kind <= TokenType::CHAR)
 		{
 			identifiers.insert(src[i]);
 			add_token(i, TokenType::VAR, src); return;
-		}
-
-		if (lexems[i - 1].kind == TokenType::QUOTE || lexems[i - 1].kind == TokenType::CHARACTER)
-		{
-			add_token(i, TokenType::CHARACTER, src); return;
 		}
 
 		if (identifiers.find(src[i]) != identifiers.end())
@@ -107,13 +166,15 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 	if (src[i] == "while") add_token(i, TokenType::WHILE, src);
 	if (src[i] == "print") add_token(i, TokenType::PRINT, src);
 	if (src[i] == "read") add_token(i, TokenType::READ, src);
+	if (src[i] == "or") add_token(i, TokenType::OR, src);
+	if (src[i] == "and") add_token(i, TokenType::AND, src);
+	if (src[i] == "do") add_token(i, TokenType::DO, src);
 
 	return;
 }
 
 inline std::istream& operator >>(std::istream& ustream, Lexer& L)
 {
-
 	std::string code;
 	while (!ustream.eof()) {
 		ustream >> code;

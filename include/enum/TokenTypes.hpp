@@ -5,20 +5,21 @@
 #define _TOKEN_TYPE
 
 enum class TokenType {
+
 	// IDENTIFIER
 	VAR,
 
 	// TYPE
-	NUMBER,
-	CHARACTER,
-	REAL, //----
-	CONSTSTRING,  //-----
+	NUMBER,			// С†РµР»РѕРµ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРµ РёР»Рё РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРµ С‡РёСЃР»Рѕ 
+	CHARACTER,		// РѕРґРёРЅ СЃРёРјРІРѕР» РІ '_'
+	REAL,			// РІРµС‰РµСЃС‚РІРµРЅРЅРѕРµ С‡РёСЃР»Рѕ РІРёРґР° _._  
+	CONSTSTRING,	// СЃС‚СЂРѕРєР° РІ "_"
 
 	// VALUE
 	INT,		// int
 	BOOL,		// bool
 	STRING,		// string
-	CHAR, //-----
+	CHAR,		// char
 
 	// SYMBOLS
 	LPAR,		// (
@@ -26,14 +27,17 @@ enum class TokenType {
 	LBRA,		// {
 	RBRA,		// }
 	LESS,		// <
+	MORE,		// >
 	PLUS,		// +
 	MINUS,		// -
+	MULTI,		// *
+	DIV,		// /
 	ASSIGMENT,	// =
-	UNEQUAL,    // != ---------------------------ДОПИСАТЬ
+	UNEQUAL,    // !=
 	EQUAL,		// ==
 	NOT,		// !
 	SEMICOLON,	// ;
-	QUOTE,		// '
+	COMMA,		// ,
 
 	// WORDS
 	IF,			// if
@@ -42,16 +46,11 @@ enum class TokenType {
 	WHILE,		// while
 	PRINT,		// print
 	READ,		// read
+	OR,			// or
+	AND,		// and
+	DO,			// do
 
-	// TEMP_TYPES // временные типы, добавленные для совместимости с парсером
-	DO,
-	MULTI,
-	DIV,
-	MORE,
-
-	OR,
-	AND,
-	EOFF
+	EOFF		// РєРѕРЅРµС† С„Р°Р№Р»Р°
 };
 
 #endif
