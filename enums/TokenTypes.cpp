@@ -3,53 +3,52 @@
 #define _TOKEN_TYPE
 
 enum class TokenType {
-		// IDENTIFIER
-		VAR,
 
-		// TYPE
-		NUMBER,
-		CHARACTER,
-		REAL, //----
-		CONSTSTRING,  //-----
+	// IDENTIFIER
+	VAR,
 
-		// VALUE
-		INT,		// int
-		BOOL,		// bool
-		STRING,		// string
-		CHAR, //-----
+	// TYPE
+	NUMBER,			// целое отрицательное или положительное число 
+	CHARACTER,		// один символ в '_'
+	REAL,			// вещественное число вида _._  
+	CONSTSTRING,	// строка в "_"
 
-		// SYMBOLS
-		LPAR,		// (
-		RPAR,		// )
-		LBRA,		// {
-		RBRA,		// }
-		LESS,		// <
-		PLUS,		// +
-		MINUS,		// -
-		ASSIGMENT,	// =
-		UNEQUAL,    // != ---------------------------ДОПИСАТЬ
-		EQUAL,		// ==
-		NOT,		// !
-		SEMICOLON,	// ;
-		QUOTE,		// '
+	// VALUE
+	INT,		// int
+	BOOL,		// bool
+	STRING,		// string
+	CHAR,		// char
 
-		// WORDS
-		IF,			// if
-		ELSE,		// else
-		FOR,		// for
-		WHILE,		// while
-		PRINT,		// print
-		READ,		// read
+	// SYMBOLS
+	LPAR,		// (
+	RPAR,		// )
+	LBRA,		// {
+	RBRA,		// }
+	LESS,		// <
+	MORE,		// >
+	PLUS,		// +
+	MINUS,		// -
+	MULTI,		// *
+	DIV,		// /
+	ASSIGMENT,	// =
+	UNEQUAL,    // !=
+	EQUAL,		// ==
+	NOT,		// !
+	SEMICOLON,	// ;
+	COMMA,		// ,
 
-		// TEMP_TYPES // временные типы, добавленные для совместимости с парсером
-		DO,
-		MULTI,
-		DIV,
-		MORE,
-		
-		OR,
-		AND,
-		EOFF
+	// WORDS
+	IF,			// if
+	ELSE,		// else
+	FOR,		// for
+	WHILE,		// while
+	PRINT,		// print
+	READ,		// read
+	OR,			// or
+	AND,		// and
+	DO,			// do
+
+	EOFF		// конец файла
 };
 
 #endif
