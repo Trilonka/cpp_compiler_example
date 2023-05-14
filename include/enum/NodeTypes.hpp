@@ -32,6 +32,7 @@ enum class NodeType {
     IFELSE,
     WHILE,
     DOWHILE,
+    FOR,
     THEN,//25
 
     EMPTY,

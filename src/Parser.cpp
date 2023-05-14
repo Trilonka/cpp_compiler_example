@@ -92,48 +92,54 @@ Node Parser::primary() {
 Node Parser::multiplicator() {
     Node left = primary();
 
-    if (token.kind == TokenType::MULTI) {
-        Node n(NodeType::MULTI);
+    while (token.kind == TokenType::MULTI || token.kind == TokenType::DIV) {
+
+        Node n;
+
+        if (token.kind == TokenType::MULTI)
+            n.kind = NodeType::MULTI;
+  
+        else if (token.kind == TokenType::DIV) 
+            n.kind = NodeType::DIV;
+            
         n.operators.push_back(left);
         get_next_token();
-        n.operators.push_back(multiplicator());
-        return n;
+        n.operators.push_back(primary());
+        
+        left = n;
     }
-    else if (token.kind == TokenType::DIV) {
-        Node n(NodeType::DIV);
-        n.operators.push_back(left);
-        get_next_token();
-        n.operators.push_back(multiplicator());
-        return n;
-    }
-    else
-        return left;
+    return left;
 };
 
 //выражения + и - приеоритет 3
 Node Parser::summator() {
     Node left = multiplicator();
+    
 
-    if (token.kind == TokenType::PLUS) {
-        Node n(NodeType::PLUS);
+    while (token.kind == TokenType::PLUS || token.kind == TokenType::MINUS) {
+
+        Node n;
+
+        if (token.kind == TokenType::PLUS) 
+            n.kind = NodeType::PLUS;
+
+        else if (token.kind == TokenType::MINUS) 
+            n.kind = NodeType::MINUS;
+
         n.operators.push_back(left);
         get_next_token();
-        n.operators.push_back(summator());
-        return n;
+        n.operators.push_back(multiplicator());
+        
+        left = n;
+   
     }
-    else if (token.kind == TokenType::MINUS) {
-        Node n(NodeType::MINUS);
-        n.operators.push_back(left);
-        get_next_token();
-        n.operators.push_back(summator());
-        return n;
-    }
-    else
-        return left;
+
+    return left;
+
 };
 
 //логические выражения больше меньше приоритет 4
-Node Parser::logicExp() {
+Node Parser::logicExp() { //ERROR ====================================================
     Node left = summator();
 
     if (token.kind == TokenType::LESS) {
@@ -155,7 +161,7 @@ Node Parser::logicExp() {
 };
 
 //выражение равно не равно приориет 5
-Node Parser::eqExp() {
+Node Parser::eqExp() { //ERROR ====================================================
     Node left = logicExp();
 
     if (token.kind == TokenType::EQUAL) {
@@ -224,6 +230,8 @@ Node Parser::expression() {
         return left;
 }
 
+
+
 //условия циклов и ифов
 Node Parser::condition() {
     if (token.kind != TokenType::LPAR)
@@ -240,7 +248,10 @@ Node Parser::condition() {
     return n;
 };
 
+
 //очередь выполняемых поддеревьев в различных statemant (операторах)
+/*
+
 Node Parser::then() {
     if (token.kind != TokenType::LBRA)
         throw BraExpected("{ expected");
@@ -250,20 +261,15 @@ Node Parser::then() {
 
     get_next_token();
     while (token.kind != TokenType::RBRA) {
-        //get_next_token();
-
-        //if (token.kind == TokenType::RBRA) //тут надо доработать==============================================---------------------------------------------
-            //break;
 
         if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
             throw InvalidSyntax("Invalid statement syntax");
-        //cout << "Invalid statement syntax";
 
         n.operators.push_back(statemant());
 
     }
     return n;
-}
+}*/
 
 //Раздел созания оператора
 Node Parser::statemant() {
@@ -279,18 +285,19 @@ Node Parser::statemant() {
         n.operators.push_back(condition());
 
         get_next_token();
-        n.operators.push_back(then());
+        n.operators.push_back(statemant());
 
         if (token.kind == TokenType::ELSE) { //нашли елсе
             n.kind = NodeType::IFELSE;
-            n.operators.push_back(then());
+            n.operators.push_back(statemant());
         }
 
-        get_next_token();
-        if (token.kind != TokenType::SEMICOLON)
-            throw SemiliconExpected("; expected");
-        //cout << "; expected";
-        get_next_token();
+        //get_next_token();
+
+        //if (token.kind != TokenType::SEMICOLON)
+            //throw SemiliconExpected("; expected");
+
+        //get_next_token();
 
     }
     //раздел с циклом while
@@ -301,26 +308,93 @@ Node Parser::statemant() {
         n.operators.push_back(condition());
 
         get_next_token();
-        n.operators.push_back(then());
+        n.operators.push_back(statemant());
+
+        //get_next_token();
+
+        //if (token.kind != TokenType::SEMICOLON)
+            //throw SemiliconExpected("; expected");
+
+        //get_next_token();
+    }
+
+    //раздел с for
+    else if (token.kind == TokenType::FOR) {
+        n.kind = NodeType::FOR;
 
         get_next_token();
+
+        if (token.kind != TokenType::LPAR)
+            throw ParExpected("( expected");
+
+        get_next_token();
+
+        Node temp_1(NodeType::EXPR);
+        temp_1.operators.push_back(expression());
+        n.operators.push_back(temp_1);
+
+        if(token.kind != TokenType::SEMICOLON)
+            throw InvalidSyntax("Invalid FOR syntax ; expected");
+        get_next_token();
+
+        n.operators.push_back(orExp());
+
         if (token.kind != TokenType::SEMICOLON)
-            throw SemiliconExpected("; expected");
-        //cout << "; expected";
-        get_next_token();// ===========================================--------------------------------------
+            throw InvalidSyntax("Invalid FOR syntax ; expected");
+        get_next_token();
+
+        Node temp_2(NodeType::EXPR);
+        temp_2.operators.push_back(expression());
+        n.operators.push_back(temp_2);
+
+
+        if (token.kind != TokenType::RPAR)
+            throw ParExpected(") expected");
+        get_next_token();
+
+        n.operators.insert(n.operators.end() - 1, statemant());
+        get_next_token();
+
     }
+
     //раздел пустого узла
     else if (token.kind == TokenType::SEMICOLON) {
         n.kind = NodeType::EMPTY;
     }
+    //==============================================-------------------------------------------
+    else if (token.kind == TokenType::LBRA) {
+        n.kind = NodeType::THEN;
+        get_next_token();
+        while (token.kind != TokenType::RBRA) {
+
+            if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
+                throw InvalidSyntax("Invalid statement syntax");
+
+            n.operators.push_back(statemant());
+
+        }
+
+        get_next_token();
+
+        if (token.kind != TokenType::SEMICOLON)
+            throw SemiliconExpected("; expected");
+
+        get_next_token();
+
+        return n;
+
+    }
+
+    //==============================================-------------------------------------------
     //раздел выражения просто выражение
     else {
         n.kind = NodeType::EXPR;
         n.operators.push_back(expression());
+
         if (token.kind != TokenType::SEMICOLON)
             throw SemiliconExpected("; expected");
-        //cout << "; expected";
-        get_next_token(); // ==========================================--------------------------------
+
+        get_next_token(); 
 
     }
 
@@ -338,10 +412,8 @@ Node Parser::parse() {
         tree.operators.push_back(statemant());
     }
 
-
     if (token.kind != TokenType::EOFF)
         throw InvalidSyntax("Invalid statement syntax");
-    //cout << "Invalid statement syntax";
 
     tokenIndex = 0;
     return tree;
