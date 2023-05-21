@@ -320,7 +320,8 @@ Node Parser::statemant() {
 
     //раздел с for
     else if (token.kind == TokenType::FOR) {
-        n.kind = NodeType::FOR;
+        n.kind = NodeType::THEN;
+        Node forNode(NodeType::FOR);
 
         get_next_token();
 
@@ -331,13 +332,13 @@ Node Parser::statemant() {
 
         Node temp_1(NodeType::EXPR);
         temp_1.operators.push_back(expression());
-        n.operators.push_back(temp_1);
+        forNode.operators.push_back(temp_1);
 
         if(token.kind != TokenType::SEMICOLON)
             throw InvalidSyntax("Invalid FOR syntax ; expected");
         get_next_token();
 
-        n.operators.push_back(orExp());
+        forNode.operators.push_back(orExp());
 
         if (token.kind != TokenType::SEMICOLON)
             throw InvalidSyntax("Invalid FOR syntax ; expected");
@@ -345,16 +346,16 @@ Node Parser::statemant() {
 
         Node temp_2(NodeType::EXPR);
         temp_2.operators.push_back(expression());
-        n.operators.push_back(temp_2);
+        forNode.operators.push_back(temp_2);
 
 
         if (token.kind != TokenType::RPAR)
             throw ParExpected(") expected");
         get_next_token();
 
-        n.operators.insert(n.operators.end() - 1, statemant());
+        forNode.operators.insert(forNode.operators.end() - 1, statemant());
         get_next_token();
-
+        n.operators.push_back(forNode);
     }
 
     //раздел пустого узла

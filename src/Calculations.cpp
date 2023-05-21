@@ -6,6 +6,15 @@ Obj* wrap(std::string var) {
     if (type == VarType::INT) {
         return new Int(value);
     }
+    if (type == VarType::BOOL) {
+        return new Bool(value);
+    }
+    if (type == VarType::REAL) {
+        return new Real(value);
+    }
+    if (type == VarType::STRING) {
+        return new Str(value);
+    }
 }
 
 std::string multi_str(std::string str, int count) {
@@ -14,6 +23,11 @@ std::string multi_str(std::string str, int count) {
         res += str;
     }
     return res;
+}
+
+bool isTrue(std::string logical_operand) {
+    Obj* logical = wrap(logical_operand);
+    return logical->toBool();
 }
 
 Obj* sum(std::string left_operand, std::string right_operand) { // +
@@ -107,4 +121,56 @@ Obj* div(std::string left_operand, std::string right_operand) { // /
 
     std::cout << "Type not supported.\n";
     exit(1);
+}
+
+Obj* lessThen(std::string left_operand, std::string right_operand) {
+    Obj* left = wrap(left_operand);
+    Obj* right = wrap(right_operand);
+
+    if (left->type() == VarType::STRING || right->type() == VarType::STRING) {
+        return new Bool(left->toStr() < right->toStr());
+    }
+    if (left->type() == VarType::REAL || right->type() == VarType::REAL) {
+        return new Bool(left->toReal() < right->toReal());
+    }
+    if (left->type() == VarType::BOOL && right->type() == VarType::BOOL) {
+        std::cout << "Just boolean operation not allowed.\n";
+        exit(1);
+    }
+    if (left->type() == VarType::INT || right->type() == VarType::INT) {
+        return new Int(left->toInt() < right->toInt());
+    }
+
+    std::cout << "Type not supported.\n";
+    exit(1);
+}
+
+Obj* biggerThen(std::string left_operand, std::string right_operand) {
+    Obj* left = wrap(left_operand);
+    Obj* right = wrap(right_operand);
+
+    if (left->type() == VarType::STRING || right->type() == VarType::STRING) {
+        return new Bool(left->toStr() > right->toStr());
+    }
+    if (left->type() == VarType::REAL || right->type() == VarType::REAL) {
+        return new Bool(left->toReal() > right->toReal());
+    }
+    if (left->type() == VarType::BOOL && right->type() == VarType::BOOL) {
+        std::cout << "Just boolean operation not allowed.\n";
+        exit(1);
+    }
+    if (left->type() == VarType::INT || right->type() == VarType::INT) {
+        return new Int(left->toInt() > right->toInt());
+    }
+
+    std::cout << "Type not supported.\n";
+    exit(1);
+}
+
+Obj* equal(std::string left_operand, std::string right_operand) {
+    return new Bool(left_operand == right_operand);
+}
+
+Obj* notEqual(std::string left_operand, std::string right_operand) {
+    return new Bool(left_operand != right_operand);
 }

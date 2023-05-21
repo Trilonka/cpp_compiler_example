@@ -54,81 +54,61 @@ void VirtualMachine::run(std::vector<std::string> program) {
         if (op == OperationType::ADD) {
             std::string second = stack.top(); stack.pop();
             std::string first = stack.top(); stack.pop();
-            stack.push(sum(first, second)->toStore()); // TODO?
+            stack.push(sum(first, second)->toStore());
             pc += 1;
         }
         if (op == OperationType::SUB) {
             std::string second = stack.top(); stack.pop();
             std::string first = stack.top(); stack.pop();
-            stack.push(sub(first, second)->toStore()); // TODO?
+            stack.push(sub(first, second)->toStore());
             pc += 1;
         }
         if (op == OperationType::MULTI) {
             std::string second = stack.top(); stack.pop();
             std::string first = stack.top(); stack.pop();
-            stack.push(mul(first, second)->toStore()); // TODO?
+            stack.push(mul(first, second)->toStore());
             pc += 1;
         }
         if (op == OperationType::DIV) {
             std::string second = stack.top(); stack.pop();
             std::string first = stack.top(); stack.pop();
-            stack.push(div(first, second)->toStore()); // DIV?
+            stack.push(div(first, second)->toStore());
             pc += 1;
         }
         if (op == OperationType::LT) {
             std::string second = stack.top(); stack.pop();
             std::string first = stack.top(); stack.pop();
-            if (first < second) { // TODO
-                stack.push("true");
-            }
-            else {
-                stack.push("false");
-            }
+            stack.push(lessThen(first, second)->toStore());
             pc += 1;
         }
         if (op == OperationType::BT) {
             std::string second = stack.top(); stack.pop();
             std::string first = stack.top(); stack.pop();
-            if (first > second) { // TODO
-                stack.push("true");
-            }
-            else {
-                stack.push("false");
-            }
+            stack.push(biggerThen(first, second)->toStore());
             pc += 1;
         }
         if (op == OperationType::EQUAL) {
             std::string second = stack.top(); stack.pop();
             std::string first = stack.top(); stack.pop();
-            if (first == second) {
-                stack.push("true");
-            }
-            else {
-                stack.push("false");
-            }
+            stack.push(equal(first, second)->toStore());
             pc += 1;
         }
         if (op == OperationType::NONEQUAL) {
             std::string second = stack.top(); stack.pop();
             std::string first = stack.top(); stack.pop();
-            if (first != second) {
-                stack.push("true");
-            }
-            else {
-                stack.push("false");
-            }
+            stack.push(notEqual(first, second)->toStore());
             pc += 1;
         }
         if (op == OperationType::JZ) {
-            if (stack.top() == "false") {
-                pc = stoi(arg);
+            if (isTrue(stack.top())) {
+                pc += 2;
             }
             else {
-                pc += 2;
+                pc = stoi(arg);
             }
         }
         if (op == OperationType::JNZ) {
-            if (stack.top() == "true") {
+            if (isTrue(stack.top())) {
                 pc = stoi(arg);
             }
             else {

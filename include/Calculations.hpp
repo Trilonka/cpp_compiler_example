@@ -20,4 +20,14 @@ Obj* mul(std::string left_operand, std::string right_operand);
 
 Obj* div(std::string left_operand, std::string right_operand);
 
+Obj* lessThen(std::string left_operand, std::string right_operand);
+
+Obj* biggerThen(std::string left_operand, std::string right_operand);
+
+Obj* equal(std::string left_operand, std::string right_operand);
+
+Obj* notEqual(std::string left_operand, std::string right_operand);
+
+bool isTrue(std::string logical);
+
 #endif

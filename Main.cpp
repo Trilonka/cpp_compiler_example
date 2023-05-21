@@ -29,10 +29,10 @@ int main() {
     Parser parser(lexer.lexems);
     Compiler compiler;
     VirtualMachine vm;
-
     int i = 0; int j = 0;
     print(parser.parse(), i, j);
 
-    //compiler.compile(parser.parse());
-    //vm.run(compiler.program);
+    compiler.compile(parser.parse());
+    vm.run(compiler.program);
+    char c; std::cin >> c;
 }

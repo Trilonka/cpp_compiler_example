@@ -92,6 +92,16 @@ void Compiler::compile(Node node) {
         gen(OperationType::JMP); gen(addr1);
         program[addr2] = to_string(programCounter);
     }
+    else if (node.kind == NodeType::FOR) {
+        compile(node.operators[0]);
+        int addr1 = programCounter;
+        compile(node.operators[1]);
+        gen(OperationType::JZ); int addr2 = programCounter; gen(0);
+        compile(node.operators[2]);
+        compile(node.operators[3]);
+        gen(OperationType::JMP); gen(addr1);
+        program[addr2] = to_string(programCounter);
+    }
     else if (node.kind == NodeType::DOWHILE) {
         int addr = programCounter;
         compile(node.operators[0]);
