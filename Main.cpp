@@ -1,4 +1,7 @@
+#pragma once
+
 #include <iostream>
+#include <fstream>
 
 #include "Main.hpp"
 
@@ -15,7 +18,7 @@ void print(Node root, int& count, int& turn) {
         if (i == root.operators.size()) cout << "|\n|\n|\n*";
 
     }
-    root.print();
+    //root.print();
     cout << "layer = " << count + 1 << " turn = " << turn + 1 << " : ";
     root.print();
 
@@ -23,16 +26,38 @@ void print(Node root, int& count, int& turn) {
 }
 
 int main() {
-    Lexer lexer("int a = 2; for(int i = 0; i < 10; i = i + 1) a = a + 1;");
-    lexer.tokenize();
 
-    Parser parser(lexer.lexems);
-    Compiler compiler;
-    VirtualMachine vm;
-    int i = 0; int j = 0;
-    print(parser.parse(), i, j);
+    try
+    {
+        Lexer lexer("int a = 1; while (a < 3) {a = a + 1; int b = 4; b = a + b;};");
 
-    compiler.compile(parser.parse());
-    vm.run(compiler.program);
-    char c; std::cin >> c;
+        /*std::ifstream fin("D:\\Source\\Repos\\cpp_compiler_example\\test.txt");
+
+        if (fin)
+        {
+            fin >> lexer;
+            fin.close();
+        }*/
+
+        std::vector<std::string> l = lexer.tokenize();
+
+        Parser parser(lexer.lexems);
+        Compiler compiler;
+        VirtualMachine vm;
+        int i = 0; int j = 0;
+        //print(parser.parse(), i, j);
+
+        compiler.compile(parser.parse());
+        vm.run(compiler.program);
+
+        char c; std::cin >> c;
+    }
+    catch (UnknownSymbolException e)
+    {
+        e.print();
+    }
+    catch (Exception e)
+    {
+        e.print();
+    }
 }

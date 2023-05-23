@@ -9,14 +9,29 @@ Lexer::~Lexer() { }
 std::vector<std::string> Lexer::tokenize()
 {
 	std::vector<std::string> res;
-	std::regex regular("('.')|([\"]([\\w]*[\\W]*)*[\"])|([\\w]+[.][\\w]+)|([\\w]+)|([\\W])");
-
+	std::regex regular("('.')|(\")|([\\w]+[.][\\w]+)|([\\w]+)|([\\W])");
+	
 	std::sregex_token_iterator iter(source.begin(), source.end(), regular);
 	std::sregex_token_iterator end;
 
 	for (int i = 0; iter != end; ++iter, ++i)
 	{
-		if (*iter != " ")
+		if (*iter == "\"")
+		{
+			std::string const_str;
+
+			++iter;
+			while (*iter != "\"") 
+			{
+				std::string char_str = *iter;
+				const_str = const_str + char_str; 
+				++iter;
+			}
+
+			res.push_back(const_str);
+			add_token(res.size() - 1, TokenType::CONSTSTRING, res);
+		}
+		else if (*iter != " ")
 		{
 			res.push_back(*iter);
 			kind_token(res.size() - 1, res);
@@ -61,16 +76,6 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 		src[i].erase(src[i].begin());
 		src[i].erase(src[i].end() - 1);
 		add_token(i, TokenType::CHARACTER, src);
-
-		return;
-	}
-
-	regular = ("[\"]([\\w]*[\\W]*)*[\"]");
-	if (regex_search(src[i], regular))
-	{
-		src[i].erase(src[i].begin());
-		src[i].erase(src[i].end() - 1);
-		add_token(i, TokenType::CONSTSTRING, src);
 
 		return;
 	}
@@ -123,6 +128,8 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 		if (src[i] == "!") add_token(i, TokenType::NOT, src);
 		if (src[i] == ";") add_token(i, TokenType::SEMICOLON, src);
 		if (src[i] == ",") add_token(i, TokenType::COMMA, src);
+		if (src[i] == "[") add_token(i, TokenType::LSQBRA, src);
+		if (src[i] == "]") add_token(i, TokenType::RSQBRA, src);
 
 		if (src[i] == "=") {
 			if (src[i - 1] == "=")
@@ -173,7 +180,7 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 	return;
 }
 
-inline std::istream& operator >>(std::istream& ustream, Lexer& L)
+std::istream& operator >>(std::istream& ustream, Lexer& L)
 {
 	std::string code;
 	while (!ustream.eof()) {

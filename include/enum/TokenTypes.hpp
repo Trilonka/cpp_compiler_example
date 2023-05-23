@@ -38,6 +38,8 @@ enum class TokenType {
 	NOT,		// !
 	SEMICOLON,	// ;
 	COMMA,		// ,
+	LSQBRA,		// [
+	RSQBRA,		// ]
 
 	// WORDS
 	IF,			// if
