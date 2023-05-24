@@ -354,7 +354,7 @@ Node Parser::statemant() {
         get_next_token();
 
         forNode.operators.insert(forNode.operators.end() - 1, statemant());
-        get_next_token();
+
         n.operators.push_back(forNode);
     }
 
