@@ -1,4 +1,7 @@
+#pragma once
+
 #include <iostream>
+#include <fstream>
 
 #include "Main.hpp"
 
@@ -24,19 +27,62 @@ void print(Node root, int& count, int& turn) {
 
 int main() {
 
+    try
+    {
 
-    //for(int i = 0; i < 10; i = i + 1) a = a + b + i; int f = 12; if(a > b){ b = b + f; f = 0;}
-    Lexer lexer("int a = 1; int b = 2; for(int i = 0; i < 10; i = i + 1) a = a + b + i; int f = 12; if(a > b){ b = b + f; f = 0;} string s = \"kek\"; for(int i = 0; i < 5; i = i + 1) {f = f - 1;}; a = a + 100;");
-    lexer.tokenize();
 
-    Parser parser(lexer.lexems);
-    Compiler compiler;
-    VirtualMachine vm;
 
-    //int i = 0; int j = 0;
-    //print(parser.parse(), i, j);
+        Lexer lexer;
+        //("int a = 1; int b = 2; for(int i = 0; i < 10; i = i + 1) a = a + b + i; int f = 12; if(a > b){ b = b + f; f = 0;}; string s = \"kek\"; for(int i = 0; i < 5; i = i + 1) {f = f - 1;}; a = a + 100;");
 
-    compiler.compile(parser.parse());
-    vm.run(compiler.program);
-    char c; std::cin >> c;
+        std::ifstream fin("C:\\Users\\1\\Desktop\\Âóç\\Programm progect\\GitHub\\cpp_compiler_example\\tests\\calc_test_4.das");
+
+        if (fin)
+        {
+            fin >> lexer;
+            fin.close();
+        }
+
+        std::vector<std::string> l = lexer.tokenize();
+
+        Parser parser(lexer.lexems);
+        Compiler compiler;
+        VirtualMachine vm;
+
+        int i = 0; int j = 0;
+        print(parser.parse(), i, j);
+
+        compiler.compile(parser.parse());
+        vm.run(compiler.program);
+
+        char c; std::cin >> c;
+    }
+    catch (VariableNotExistsException e)
+    {
+        e.print();
+    }
+    catch (InvalidSyntax e)
+    {
+        e.print();
+    }
+    catch (SemiliconExpected e)
+    {
+        e.print();
+    }
+    catch (BraExpected e)
+    {
+        e.print();
+    }
+    catch (ParExpected e)
+    {
+        e.print();
+    }
+    catch (UnknownSymbolException e)
+    {
+        e.print();
+    }
+    catch (Exception e)
+    {
+        e.print();
+    }
 }

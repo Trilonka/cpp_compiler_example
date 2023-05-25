@@ -37,6 +37,6 @@ public:
 	friend std::istream& operator >>(std::istream& ustream, Lexer& L);
 };
 
-inline std::istream& operator >>(std::istream& ustream, Lexer& L);
+std::istream& operator >>(std::istream& ustream, Lexer& L);
 
 #endif
