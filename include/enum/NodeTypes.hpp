@@ -4,12 +4,21 @@
 
 enum class NodeType {
     VAR,
+
+    //типы данных
     INT,
     BOOL,//
     STRING,//
     CHAR,// 4
     REAL,//
 
+    //статические массивы
+    INTARR,
+    BOOLARR,
+    CHARARR,
+    REALARR,
+
+    //константные значения
     CONSTINT,//6
     CONSTCHAR,//
     CONSTSTRING,//
@@ -27,17 +36,20 @@ enum class NodeType {
     EQUAL,
     UNEQUAL,
 
-    SET, //20
-    IF, //21
+    SET, //
+    IF, //
     IFELSE,
     WHILE,
     DOWHILE,
     FOR,
-    THEN,//25
+    THEN,//
+
+    PRINT,
+    READ,
 
     EMPTY,
-    EXPR,//27
-    PROG//28
+    EXPR,//
+    PROG//
 };
 
 #endif
