@@ -8,6 +8,8 @@
 enum class OperationType {
     FETCHNEW,
     FETCH,
+    FETCHARR,
+    FETCHELEMENT,
     UNFETCH,
     STORE,
     PUSH,
@@ -20,6 +22,8 @@ enum class OperationType {
     BT,
     EQUAL,
     NONEQUAL,
+    PRINT,
+    READ,
     JZ,
     JNZ,
     JMP,

@@ -17,6 +17,22 @@ Obj* wrap(std::string var) {
     }
 }
 
+Obj* set(std::string var, std::string value) {
+    VarType type = vartypeNamesStr[var.substr(0, var.find(" "))];
+    if (type == VarType::STRING) {
+        return new Str(value);
+    }
+    if (type == VarType::INT) {
+        return new Int(value);
+    }
+    if (type == VarType::BOOL) {
+        return new Bool(value);
+    }
+    if (type == VarType::REAL) {
+        return new Real(value);
+    }
+}
+
 std::string multi_str(std::string str, int count) {
     std::string res;
     for (int i = 0; i < count; ++i) {

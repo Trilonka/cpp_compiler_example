@@ -37,6 +37,8 @@ public:
 
     bool processVariables(Node& node);
 
+    bool processArray(Node& node);
+
     bool processConstants(Node& node);
 
     void saveVariable(string varName, VarType varType);
