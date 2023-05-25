@@ -29,15 +29,15 @@ int main() {
 
     try
     {
-        Lexer lexer("int a = 1; while (a < 3) {a = a + 1; int b = 4; b = a + b;};");
+        Lexer lexer;
 
-        /*std::ifstream fin("D:\\Source\\Repos\\cpp_compiler_example\\test.txt");
+        std::ifstream fin("D:\\Source\\Repos\\cpp_compiler_example\\tests\\calculation.das");
 
         if (fin)
         {
             fin >> lexer;
             fin.close();
-        }*/
+        }
 
         std::vector<std::string> l = lexer.tokenize();
 
