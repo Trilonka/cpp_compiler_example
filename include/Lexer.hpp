@@ -10,7 +10,7 @@
 #include "Token.hpp"
 #include "enum/TokenTypes.hpp"
 
-#define IS_TYPE(c)	(c == "int" || c == "string" || c == "bool")
+#define IS_TYPE(c)	(c == "int" || c == "string" || c == "bool" ||  c == "char" || c == "real")
 
 class Lexer {
 

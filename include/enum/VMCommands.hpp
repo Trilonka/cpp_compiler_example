@@ -26,12 +26,12 @@ enum class OperationType {
     READ,
     JZ,
     JNZ,
-    JMP,
+    GOTO,
     HALT
 };
 
-extern std::map<OperationType, std::string> operationNames;
+extern std::map<OperationType, std::string> operation_to_string;
 
-extern std::map<std::string, OperationType> operationNamesStr;
+extern std::map<std::string, OperationType> string_to_operation;
 
 #endif

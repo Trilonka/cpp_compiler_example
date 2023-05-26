@@ -23,29 +23,38 @@ void print(Node root, int& count, int& turn) {
     count -= 1;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 
     try
     {
+        Lexer lexer;
+
+        if (argc < 2) {
+            std::cout << "File name required!\n";
+            exit(1);
+        }
+
+        std::ifstream fin(argv[1]);
 
         Lexer lexer;
 
         std::ifstream fin("C:\\Users\\1\\Desktop\\Âóç\\Programm progect\\GitHub\\cpp_compiler_example\\tests\\calc_test_4.das");
+
 
         if (fin)
         {
             fin >> lexer;
             fin.close();
         }
-
+        lexer.tokenize();
         lexer.tokenize();
 
         Parser parser(lexer.lexems);
         Compiler compiler;
         VirtualMachine vm;
-
         //int i = 0; int j = 0;
         //print(parser.parse(), i, j);
+
 
         compiler.compile(parser.parse());
         vm.run(compiler.program);

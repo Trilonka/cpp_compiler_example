@@ -67,6 +67,7 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 		if (src[i] == "bool") add_token(i, TokenType::BOOL, src);
 		if (src[i] == "string") add_token(i, TokenType::STRING, src);
 		if (src[i] == "char") add_token(i, TokenType::CHAR, src);
+		if (src[i] == "real") add_token(i, TokenType::REAL, src);
 
 		return;
 	}
@@ -89,10 +90,10 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 		{
 			lexems.pop_back();
 			src[i] = src[i - 1] + src[i];
-			add_token(i, TokenType::REAL, src);
+			add_token(i, TokenType::REALNUMBER, src);
 			src.erase(src.begin() + i - 1);
 		}
-		else add_token(i, TokenType::REAL, src);
+		else add_token(i, TokenType::REALNUMBER, src);
 
 		return;
 	}
@@ -187,6 +188,7 @@ std::istream& operator >>(std::istream& ustream, Lexer& L)
 	while (!ustream.eof()) {
 		ustream >> code;
 		L.source.append(code);
+		//std::cout << code;
 		L.source.append(" ");
 	}
 	return ustream;

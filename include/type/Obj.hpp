@@ -27,6 +27,8 @@ public:
 
     virtual bool toBool();
 
+    virtual char toChar();
+
     virtual VarType type();
 
     virtual std::string toStore();

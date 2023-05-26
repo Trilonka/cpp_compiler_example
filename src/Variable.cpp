@@ -1,6 +1,6 @@
 #include "Variable.hpp" 
 
-std::map<std::string, VarType> vartypeNamesStr {
+std::map<std::string, VarType> string_to_vartype {
     {"OBJ", VarType::OBJ},
     {"INT", VarType::INT},
     {"STRING", VarType::STRING},
@@ -9,7 +9,7 @@ std::map<std::string, VarType> vartypeNamesStr {
     {"REAL", VarType::REAL}
 };
 
-std::map<VarType, std::string> vartypeNames {
+std::map<VarType, std::string> vartype_to_string {
     {VarType::OBJ, "OBJ"},
     {VarType::INT, "INT"},
     {VarType::STRING, "STRING"},
@@ -18,9 +18,8 @@ std::map<VarType, std::string> vartypeNames {
     {VarType::REAL, "REAL"}
 };
 
-std::string init_value(std::string type_str) {
-    VarType type = vartypeNamesStr[type_str];
 
+std::string init_value(VarType& type) {
     switch (type) {
         case VarType::OBJ: {
             return "";
@@ -32,7 +31,7 @@ std::string init_value(std::string type_str) {
             return "";
         }
         case VarType::BOOL: {
-            return "true";
+            return "0";
         }
         case VarType::CHAR: {
             return "";
@@ -41,4 +40,10 @@ std::string init_value(std::string type_str) {
             return "0.0";
         }
     }
+};
+
+std::string init_value(std::string type_str) {
+    VarType type = string_to_vartype[type_str];
+
+    return init_value(type);
 };

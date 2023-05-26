@@ -9,7 +9,7 @@ UnknownSymbolException::UnknownSymbolException(const char* s, std::string k) : E
 UnknownSymbolException::UnknownSymbolException(const UnknownSymbolException& e)
 {
 	str = new char[strlen(e.str) + 1];
-	strcpy_s(str, strlen(e.str) + 1, e.str);
+	std::strncpy(str, e.str, strlen(e.str) + 1);
 	symbol = e.symbol;
 }
 

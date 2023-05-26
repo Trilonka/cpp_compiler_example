@@ -8,10 +8,10 @@ InvalidSyntax::InvalidSyntax(char* s) : Exception(s) {}
 
 InvalidSyntax::InvalidSyntax(const char* s) : Exception(s) {}
 
-InvalidSyntax::InvalidSyntax(const InvalidSyntax& e) //Конструктор копии
+InvalidSyntax::InvalidSyntax(const InvalidSyntax& e) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 {
     str = new char[strlen(e.str) + 1];
-    strcpy_s(str, strlen(e.str) + 1, e.str);
+    std::strncpy(str, e.str, strlen(e.str) + 1);
 }
 
 void InvalidSyntax::print() {
@@ -24,10 +24,10 @@ SemiliconExpected::SemiliconExpected(char* s) : InvalidSyntax(s) {}
 
 SemiliconExpected::SemiliconExpected(const char* s) : InvalidSyntax(s) {}
 
-SemiliconExpected::SemiliconExpected(const SemiliconExpected& e) //Конструктор копии
+SemiliconExpected::SemiliconExpected(const SemiliconExpected& e) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 {
     str = new char[strlen(e.str) + 1];
-    strcpy_s(str, strlen(e.str) + 1, e.str);
+    std::strncpy(str, e.str, strlen(e.str) + 1);
 }
 
 void SemiliconExpected::print() {
@@ -40,10 +40,10 @@ BraExpected::BraExpected(char* s) : InvalidSyntax(s) {}
 
 BraExpected::BraExpected(const char* s) : InvalidSyntax(s) {}
 
-BraExpected::BraExpected(const BraExpected& e) //Конструктор копии
+BraExpected::BraExpected(const BraExpected& e) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 {
     str = new char[strlen(e.str) + 1];
-    strcpy_s(str, strlen(e.str) + 1, e.str);
+    std::strncpy(str, e.str, strlen(e.str) + 1);
 }
 
 void BraExpected::print() {
@@ -56,10 +56,10 @@ ParExpected::ParExpected(char* s) : InvalidSyntax(s) {}
 
 ParExpected::ParExpected(const char* s) : InvalidSyntax(s) {}
 
-ParExpected::ParExpected(const ParExpected& e) //Конструктор копии
+ParExpected::ParExpected(const ParExpected& e) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 {
     str = new char[strlen(e.str) + 1];
-    strcpy_s(str, strlen(e.str) + 1, e.str);
+    std::strncpy(str, e.str, strlen(e.str) + 1);
 }
 
 void ParExpected::print() {

@@ -6,7 +6,7 @@ Parser::Parser(std::vector<Token> tokens) {
     this->tokens.push_back(EOFF);
 }
 
-//Первичные выражения - приоритет 1
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 1
 Node Parser::primary() {
 
     if (token.kind == TokenType::LPAR) {
@@ -19,7 +19,7 @@ Node Parser::primary() {
         get_next_token();
         return n;
     }
-    //КОНСТАНТНЫЕ ЗНАЧЕНИЯ================------------------------
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ================------------------------
     else if (token.kind == TokenType::NUMBER) {
         Node n(NodeType::CONSTINT, token.value);
         get_next_token();
@@ -40,7 +40,7 @@ Node Parser::primary() {
         get_next_token();
         return n;
     }
-    //ПЕРЕМЕННЫЕ И ИХ ОБЪЯВЛЕНИЕ================------------------------
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ================------------------------
     else if (token.kind == TokenType::INT) {
         Node n(NodeType::INT);
         get_next_token();
@@ -139,7 +139,7 @@ Node Parser::primary() {
 
         return n;
     }
-    //ПРОСТО ПЕРЕМЕННАЯ=================----------------------------
+    //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ=================----------------------------
     else if (token.kind == TokenType::VAR) {
         Node n(NodeType::VAR, token.value);
         get_next_token();
@@ -162,7 +162,7 @@ Node Parser::primary() {
     //cout << "Invalid expression syntax";
 };
 
-//выражения умножения и деления приориет 2
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 2
 Node Parser::multiplicator() {
     Node left = primary();
 
@@ -185,7 +185,7 @@ Node Parser::multiplicator() {
     return left;
 };
 
-//выражения + и - приеоритет 3
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ + пїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 3
 Node Parser::summator() {
     Node left = multiplicator();
     
@@ -212,7 +212,7 @@ Node Parser::summator() {
 
 };
 
-//логические выражения больше меньше приоритет 4
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 4
 Node Parser::logicExp() { //ERROR ====================================================
     Node left = summator();
 
@@ -234,7 +234,7 @@ Node Parser::logicExp() { //ERROR ==============================================
         return left;
 };
 
-//выражение равно не равно приориет 5
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 5
 Node Parser::eqExp() { //ERROR ====================================================
     Node left = logicExp();
 
@@ -258,7 +258,7 @@ Node Parser::eqExp() { //ERROR =================================================
 
 };
 
-// выражения И приориет 6
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 6
 Node Parser::andExp() {
     Node left = eqExp();
 
@@ -274,7 +274,7 @@ Node Parser::andExp() {
 
 };
 
-//выражение or приориет 7
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ or пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 7
 Node Parser::orExp() {
     Node left = andExp();
 
@@ -306,7 +306,7 @@ Node Parser::expression() {
 
 
 
-//условия циклов и ифов
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ
 Node Parser::condition() {
     if (token.kind != TokenType::LPAR)
         throw ParExpected("( expected");
@@ -321,13 +321,13 @@ Node Parser::condition() {
 };
 
 
-//Раздел созания оператора
+//Р Р°Р·РґРµР» СЃРѕР·Р°РЅРёСЏ РѕРїРµСЂР°С‚РѕСЂР°
 Node Parser::statemant() {
 
     Node n;
 
-    //раздел с ифом
-    if (token.kind == TokenType::IF) { //нашли иф
+    //СЂР°Р·РґРµР» СЃ РёС„РѕРј
+    if (token.kind == TokenType::IF) { //РЅР°С€Р»Рё РёС„
 
         n.kind = NodeType::IF;
         get_next_token();
@@ -337,15 +337,15 @@ Node Parser::statemant() {
         get_next_token();
         n.operators.push_back(statemant());
 
-        if (token.kind == TokenType::ELSE) { //нашли елсе
+        if (token.kind == TokenType::ELSE) { //РЅР°С€Р»Рё РµР»СЃРµ
             n.kind = NodeType::IFELSE;
             get_next_token();
             n.operators.push_back(statemant());
         }
 
     }
-    //раздел с циклом while
-    else if (token.kind == TokenType::WHILE) { //нашли цикл вайл
+    //СЂР°Р·РґРµР» СЃ С†РёРєР»РѕРј while
+    else if (token.kind == TokenType::WHILE) { //РЅР°С€Р»Рё С†РёРєР» РІР°Р№Р»
         n.kind = NodeType::WHILE;
 
         get_next_token();
@@ -355,7 +355,7 @@ Node Parser::statemant() {
         n.operators.push_back(statemant());
     }
 
-    //раздел с for
+    //СЂР°Р·РґРµР» СЃ for
     else if (token.kind == TokenType::FOR) {
         n.kind = NodeType::THEN;
         Node forNode(NodeType::FOR);
@@ -395,7 +395,7 @@ Node Parser::statemant() {
         n.operators.push_back(forNode);
     }
 
-    //раздел пустого узла
+    //СЂР°Р·РґРµР» РїСѓСЃС‚РѕРіРѕ СѓР·Р»Р°
     else if (token.kind == TokenType::SEMICOLON) {
         n.kind = NodeType::EMPTY;
         get_next_token();
@@ -405,7 +405,7 @@ Node Parser::statemant() {
         get_next_token();
         while (token.kind != TokenType::RBRA) {
 
-            if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
+            if (token.kind == TokenType::EOFF) //СЃРєРѕР±РєР° РЅРµ Р·Р°РєСЂС‹Р»Р°СЃСЊ Р° РєРѕРґ Р·Р°РєРѕРЅС‡РёР»СЃСЏ
                 throw InvalidSyntax("Invalid statement syntax");
 
             n.operators.push_back(statemant());
@@ -434,7 +434,7 @@ Node Parser::statemant() {
 
         while (token.kind != TokenType::RPAR) {
 
-            if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
+            if (token.kind == TokenType::EOFF) //СЃРєРѕР±РєР° РЅРµ Р·Р°РєСЂС‹Р»Р°СЃСЊ Р° РєРѕРґ Р·Р°РєРѕРЅС‡РёР»СЃСЏ
                 throw InvalidSyntax("Invalid print syntax");
 
             Node temp(NodeType::EXPR);
@@ -469,7 +469,7 @@ Node Parser::statemant() {
 
         while (token.kind != TokenType::RPAR) {
 
-            if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
+            if (token.kind == TokenType::EOFF) //СЃРєРѕР±РєР° РЅРµ Р·Р°РєСЂС‹Р»Р°СЃСЊ Р° РєРѕРґ Р·Р°РєРѕРЅС‡РёР»СЃСЏ
                 throw InvalidSyntax("Invalid print syntax");
 
             n.operators.push_back(primary());
@@ -490,7 +490,7 @@ Node Parser::statemant() {
 
 
     }
-    //раздел выражения просто выражение
+    //СЂР°Р·РґРµР» РІС‹СЂР°Р¶РµРЅРёСЏ РїСЂРѕСЃС‚Рѕ РІС‹СЂР°Р¶РµРЅРёРµ
     else {
         n.kind = NodeType::EXPR;
         n.operators.push_back(expression());
@@ -502,7 +502,7 @@ Node Parser::statemant() {
 
     }
 
-    //остальные разделы
+    //РѕСЃС‚Р°Р»СЊРЅС‹Рµ СЂР°Р·РґРµР»С‹
     return n;
 
 }
