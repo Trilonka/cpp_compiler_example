@@ -16,7 +16,7 @@ void print(Node root, int& count, int& turn) {
         if (i == root.operators.size()) cout << "|\n|\n|\n*";
 
     }
-    //root.print();
+
     cout << "layer = " << count + 1 << " turn = " << turn + 1 << " : ";
     root.print();
 
@@ -50,8 +50,8 @@ int main() {
         Compiler compiler;
         VirtualMachine vm;
 
-        //int i = 0; int j = 0;
-        //print(parser.parse(), i, j);
+        int i = 0; int j = 0;
+        print(parser.parse(), i, j);
 
 
         compiler.compile(parser.parse());

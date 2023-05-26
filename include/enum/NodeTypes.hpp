@@ -3,22 +3,23 @@
 #define _NODE_TYPE
 
 enum class NodeType {
+    //Переменная
     VAR,
 
-    //���� ������
+    //Типы данных
     INT,
     BOOL,//
     STRING,//
     CHAR,// 4
     REAL,//
 
-    //����������� �������
+    //Инициализация массивов
     INTARR,
     BOOLARR,
     CHARARR,
     REALARR,
 
-    //����������� ��������
+    //Константные значения
     CONSTINT,//6
     CONSTCHAR,//
     CONSTSTRING,//

@@ -306,7 +306,7 @@ Node Parser::expression() {
 
 
 
-//������� ������ � ����
+//Раздел - условие
 Node Parser::condition() {
     if (token.kind != TokenType::LPAR)
         throw ParExpected("( expected");
@@ -400,6 +400,7 @@ Node Parser::statemant() {
         n.kind = NodeType::EMPTY;
         get_next_token();
     }
+    //раздел области видимости - фигурные скобки
     else if (token.kind == TokenType::LBRA) {
         n.kind = NodeType::THEN;
         get_next_token();
@@ -422,6 +423,7 @@ Node Parser::statemant() {
         return n;
 
     }
+    //вывод данных в поток
     else if (token.kind == TokenType::PRINT) {
         n.kind = NodeType::PRINT;
 
@@ -456,7 +458,7 @@ Node Parser::statemant() {
         get_next_token();
 
     }
-    
+    //Чтение данных из потока
     else if (token.kind == TokenType::READ) {
         n.kind = NodeType::READ;
 
@@ -469,7 +471,7 @@ Node Parser::statemant() {
 
         while (token.kind != TokenType::RPAR) {
 
-            if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
+            if (token.kind == TokenType::EOFF)
                 throw InvalidSyntax("Invalid print syntax");
 
             n.operators.push_back(primary());
@@ -490,7 +492,7 @@ Node Parser::statemant() {
 
 
     }
-    //раздел выражения просто выражение
+    //раздел обычного выражения
     else {
         n.kind = NodeType::EXPR;
         n.operators.push_back(expression());
@@ -502,7 +504,6 @@ Node Parser::statemant() {
 
     }
 
-    //остальные разделы
     return n;
 
 }
