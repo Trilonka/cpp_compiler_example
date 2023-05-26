@@ -2,8 +2,8 @@ int a = 5;
 int b = 9;
 
 if (a < b) {
-    print(a);
-};
+    print("a lower gagaga", a);
+}
 else {
-    print(b);
+    print("b lower hohoho", b);
 };

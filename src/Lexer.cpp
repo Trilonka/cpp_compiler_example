@@ -21,6 +21,7 @@ std::vector<std::string> Lexer::tokenize()
 		{
 			std::string const_str;
 
+			//std::cout << *iter;
 			++iter;
 			while (*iter != "\"") 
 			{
@@ -34,6 +35,7 @@ std::vector<std::string> Lexer::tokenize()
 		}
 		else if (*iter != " ")
 		{
+			//std::cout << *iter;
 			res.push_back(*iter);
 			kind_token(res.size() - 1, res);
 		}
@@ -157,7 +159,7 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 	regular = ("[\\w]+[\\d]*");
 	if ((i > 0) && (regex_search(src[i], regular)))
 	{
-		if (lexems[i - 1].kind >= TokenType::INT && lexems[i - 1].kind <= TokenType::CHAR)
+		if (lexems[i - 1].kind >= TokenType::INT && lexems[i - 1].kind <= TokenType::REAL)
 		{
 			identifiers.insert(src[i]);
 			add_token(i, TokenType::VAR, src); return;
