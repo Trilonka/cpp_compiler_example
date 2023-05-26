@@ -108,6 +108,12 @@ void VirtualMachine::run(std::vector<std::string> program) {
             stack.push(div(first, second)->toStore());
             pc += 1;
         }
+        if (op == OperationType::MOD) {
+            std::string second = stack.top(); stack.pop();
+            std::string first = stack.top(); stack.pop();
+            stack.push(mod(first, second)->toStore());
+            pc += 1;
+        }
         if (op == OperationType::LT) {
             std::string second = stack.top(); stack.pop();
             std::string first = stack.top(); stack.pop();
@@ -133,6 +139,11 @@ void VirtualMachine::run(std::vector<std::string> program) {
             pc += 1;
         }
         if (op == OperationType::PRINT) {
+            std::string valueToPrinted = stack.top(); stack.pop();
+            std::cout << wrap(valueToPrinted)->toStr();
+            pc += 1;
+        }
+        if (op == OperationType::PRINTLN) {
             std::string valueToPrinted = stack.top(); stack.pop();
             std::cout << wrap(valueToPrinted)->toStr() << std::endl;
             pc += 1;

@@ -164,6 +164,34 @@ Obj* div(std::string left_operand, std::string right_operand) {
     exit(1);
 }
 
+Obj* mod(std::string left_operand, std::string right_operand) {
+    Obj* left = wrap(left_operand);
+    Obj* right = wrap(right_operand);
+
+    if (left->type() == VarType::STRING || right->type() == VarType::STRING) {
+        std::cout << "Operation (%) for [Str] is not allowed.\n";
+        exit(1);
+    }
+    if (left->type() == VarType::REAL || right->type() == VarType::REAL) {
+        std::cout << "Operation (%) for [Real] is not allowed.\n";
+        exit(1);
+    }
+    if (left->type() == VarType::BOOL && right->type() == VarType::BOOL) {
+        std::cout << "Just boolean operation not allowed.\n";
+        exit(1);
+    }
+    if (left->type() == VarType::INT || right->type() == VarType::INT) {
+        return new Int(left->toInt() % right->toInt());
+    }
+    if (left->type() == VarType::CHAR || right->type() == VarType::CHAR) {
+        std::cout << "Operation (%) for [Char] is not allowed.\n";
+        exit(1);
+    }
+
+    std::cout << "Type not supported.\n";
+    exit(1);
+}
+
 Obj* lessThen(std::string left_operand, std::string right_operand) {
     Obj* left = wrap(left_operand);
     Obj* right = wrap(right_operand);

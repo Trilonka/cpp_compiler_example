@@ -22,6 +22,8 @@ Obj* mul(std::string left_operand, std::string right_operand);
 
 Obj* div(std::string left_operand, std::string right_operand);
 
+Obj* mod(std::string left_operand, std::string right_operand);
+
 Obj* lessThen(std::string left_operand, std::string right_operand);
 
 Obj* biggerThen(std::string left_operand, std::string right_operand);

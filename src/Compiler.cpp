@@ -45,6 +45,11 @@ void Compiler::compile(Node node) {
         compile(node.operators[1]);
         gen(OperationType::DIV);
     }
+    else if (node.kind == NodeType::MOD) {
+        compile(node.operators[0]);
+        compile(node.operators[1]);
+        gen(OperationType::MOD);
+    }
     else if (node.kind == NodeType::LT) {
         compile(node.operators[0]);
         compile(node.operators[1]);
@@ -70,6 +75,13 @@ void Compiler::compile(Node node) {
         while (i < node.operators.size()) {
             compile(node.operators[i++]);
             gen(OperationType::PRINT);
+        }
+    }
+    else if (node.kind == NodeType::PRINTLN) {
+        int i = 0;
+        while (i < node.operators.size()) {
+            compile(node.operators[i++]);
+            gen(OperationType::PRINTLN);
         }
     }
     else if (node.kind == NodeType::READ) {
