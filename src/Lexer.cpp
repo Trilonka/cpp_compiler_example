@@ -16,6 +16,7 @@ std::vector<std::string> Lexer::tokenize()
 
 	for (int i = 0; iter != end; ++iter, ++i)
 	{
+
 		if (*iter == "\"")
 		{
 			std::string const_str;

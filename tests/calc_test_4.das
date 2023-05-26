@@ -1,9 +1,9 @@
+real a = 10.25;
+real b = 1.3;
 
-int a = 10;
-int b;
-
-a = a + 1;
-
-read(a, b);
-
-print(a, b, 1+2*3);
+if(a > b){
+	print("gagaga");
+	print(a + 1 * (b + 2))
+}
+else
+	print("nonono");

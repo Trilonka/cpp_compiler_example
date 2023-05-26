@@ -1,0 +1,21 @@
+//очередь выполняемых поддеревьев в различных statemant (операторах)
+/*
+
+Node Parser::then() {
+    if (token.kind != TokenType::LBRA)
+        throw BraExpected("{ expected");
+    //cout << "{ expected";
+
+    Node n(NodeType::THEN);
+
+    get_next_token();
+    while (token.kind != TokenType::RBRA) {
+
+        if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
+            throw InvalidSyntax("Invalid statement syntax");
+
+        n.operators.push_back(statemant());
+
+    }
+    return n;
+}*/

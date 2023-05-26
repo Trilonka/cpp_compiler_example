@@ -30,7 +30,7 @@ Node Parser::primary() {
         get_next_token();
         return n;
     }
-    else if (token.kind == TokenType::REAL) {
+    else if (token.kind == TokenType::REALNUMBER) {
         Node n(NodeType::CONSTREAL, token.value);
         get_next_token();
         return n;
@@ -52,9 +52,9 @@ Node Parser::primary() {
         if (token.kind == TokenType::LSQBRA) {
             n.kind = NodeType::INTARR;
             get_next_token();
-            if(token.kind != TokenType::NUMBER)
+            if(token.kind != TokenType::NUMBER && token.kind != TokenType::VAR && token.kind != TokenType::LPAR)
                 throw InvalidSyntax("Invalid Initialization syntax");
-            n.operators.push_back(primary());
+            n.operators.push_back(expression());
             
             if (token.kind != TokenType::RSQBRA)
                 throw InvalidSyntax("] expected");
@@ -72,11 +72,33 @@ Node Parser::primary() {
         get_next_token();
 
         if (token.kind == TokenType::LSQBRA) {
-            n.kind = NodeType::INTARR;
+            n.kind = NodeType::BOOLARR;
             get_next_token();
-            if (token.kind != TokenType::NUMBER)
+            if (token.kind != TokenType::NUMBER && token.kind != TokenType::VAR && token.kind != TokenType::LPAR)
                 throw InvalidSyntax("Invalid Initialization syntax");
-            n.operators.push_back(primary());
+            n.operators.push_back(expression());
+
+            if (token.kind != TokenType::RSQBRA)
+                throw InvalidSyntax("] expected");
+            get_next_token();
+        }
+
+        return n;
+    }
+    else if (token.kind == TokenType::REAL) {
+        Node n(NodeType::REAL);
+        get_next_token();
+        if (token.kind != TokenType::VAR)
+            throw InvalidSyntax("Invalid Initialization syntax");
+        n.value = token.value;
+        get_next_token();
+
+        if (token.kind == TokenType::LSQBRA) {
+            n.kind = NodeType::REALARR;
+            get_next_token();
+            if(token.kind != TokenType::NUMBER && token.kind != TokenType::VAR && token.kind != TokenType::LPAR)
+                throw InvalidSyntax("Invalid Initialization syntax");
+            n.operators.push_back(expression());
 
             if (token.kind != TokenType::RSQBRA)
                 throw InvalidSyntax("] expected");
@@ -93,18 +115,6 @@ Node Parser::primary() {
         n.value = token.value;
         get_next_token();
 
-        if (token.kind == TokenType::LSQBRA) {
-            n.kind = NodeType::INTARR;
-            get_next_token();
-            if (token.kind != TokenType::NUMBER)
-                throw InvalidSyntax("Invalid Initialization syntax");
-            n.operators.push_back(primary());
-
-            if (token.kind != TokenType::RSQBRA)
-                throw InvalidSyntax("] expected");
-            get_next_token();
-        }
-
         return n;
     }
     else if (token.kind == TokenType::CHAR) {
@@ -116,11 +126,11 @@ Node Parser::primary() {
         get_next_token();
 
         if (token.kind == TokenType::LSQBRA) {
-            n.kind = NodeType::INTARR;
+            n.kind = NodeType::CHARARR;
             get_next_token();
-            if (token.kind != TokenType::NUMBER)
+            if (token.kind != TokenType::NUMBER && token.kind != TokenType::VAR && token.kind != TokenType::LPAR)
                 throw InvalidSyntax("Invalid Initialization syntax");
-            n.operators.push_back(primary());
+            n.operators.push_back(expression());
 
             if (token.kind != TokenType::RSQBRA)
                 throw InvalidSyntax("] expected");
@@ -136,9 +146,9 @@ Node Parser::primary() {
 
         if (token.kind == TokenType::LSQBRA) {
             get_next_token();
-            if (token.kind != TokenType::NUMBER)
+            if (token.kind != TokenType::NUMBER && token.kind != TokenType::VAR && token.kind != TokenType::LPAR)
                 throw InvalidSyntax("Invalid Initialization syntax");
-            n.operators.push_back(primary());
+            n.operators.push_back(expression());
 
             if (token.kind != TokenType::RSQBRA)
                 throw InvalidSyntax("] expected");
@@ -300,40 +310,16 @@ Node Parser::expression() {
 Node Parser::condition() {
     if (token.kind != TokenType::LPAR)
         throw ParExpected("( expected");
-    //cout << "( expected";
 
     get_next_token();
     Node n = orExp();
 
     if (token.kind != TokenType::RPAR)
         throw ParExpected(") expected");
-    //cout << ") expected";
 
     return n;
 };
 
-
-//очередь выполняемых поддеревьев в различных statemant (операторах)
-/*
-
-Node Parser::then() {
-    if (token.kind != TokenType::LBRA)
-        throw BraExpected("{ expected");
-    //cout << "{ expected";
-
-    Node n(NodeType::THEN);
-
-    get_next_token();
-    while (token.kind != TokenType::RBRA) {
-
-        if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
-            throw InvalidSyntax("Invalid statement syntax");
-
-        n.operators.push_back(statemant());
-
-    }
-    return n;
-}*/
 
 //Раздел созания оператора
 Node Parser::statemant() {
@@ -353,15 +339,9 @@ Node Parser::statemant() {
 
         if (token.kind == TokenType::ELSE) { //нашли елсе
             n.kind = NodeType::IFELSE;
+            get_next_token();
             n.operators.push_back(statemant());
         }
-
-        //get_next_token();
-
-        //if (token.kind != TokenType::SEMICOLON)
-            //throw SemiliconExpected("; expected");
-
-        //get_next_token();
 
     }
     //раздел с циклом while
@@ -373,13 +353,6 @@ Node Parser::statemant() {
 
         get_next_token();
         n.operators.push_back(statemant());
-
-        //get_next_token();
-
-        //if (token.kind != TokenType::SEMICOLON)
-            //throw SemiliconExpected("; expected");
-
-        //get_next_token();
     }
 
     //раздел с for
@@ -427,7 +400,6 @@ Node Parser::statemant() {
         n.kind = NodeType::EMPTY;
         get_next_token();
     }
-    //==============================================-------------------------------------------
     else if (token.kind == TokenType::LBRA) {
         n.kind = NodeType::THEN;
         get_next_token();
@@ -440,17 +412,16 @@ Node Parser::statemant() {
 
         }
 
-        get_next_token();
+        //get_next_token();
 
-        if (token.kind != TokenType::SEMICOLON)
-            throw SemiliconExpected("; expected");
+        //if (token.kind != TokenType::SEMICOLON)
+            //throw SemiliconExpected("; expected");
 
         get_next_token();
 
         return n;
 
     }
-
     else if (token.kind == TokenType::PRINT) {
         n.kind = NodeType::PRINT;
 
@@ -519,8 +490,6 @@ Node Parser::statemant() {
 
 
     }
-
-    //==============================================-------------------------------------------
     //раздел выражения просто выражение
     else {
         n.kind = NodeType::EXPR;
