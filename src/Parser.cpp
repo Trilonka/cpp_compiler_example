@@ -48,6 +48,19 @@ Node Parser::primary() {
             throw InvalidSyntax("Invalid Initialization syntax");
         n.value = token.value;
         get_next_token();
+
+        if (token.kind == TokenType::LSQBRA) {
+            n.kind = NodeType::INTARR;
+            get_next_token();
+            if(token.kind != TokenType::NUMBER)
+                throw InvalidSyntax("Invalid Initialization syntax");
+            n.operators.push_back(primary());
+            
+            if (token.kind != TokenType::RSQBRA)
+                throw InvalidSyntax("] expected");
+            get_next_token();
+        }
+
         return n;
     }
     else if (token.kind == TokenType::BOOL) {
@@ -57,6 +70,19 @@ Node Parser::primary() {
             throw InvalidSyntax("Invalid Initialization syntax");
         n.value = token.value;
         get_next_token();
+
+        if (token.kind == TokenType::LSQBRA) {
+            n.kind = NodeType::INTARR;
+            get_next_token();
+            if (token.kind != TokenType::NUMBER)
+                throw InvalidSyntax("Invalid Initialization syntax");
+            n.operators.push_back(primary());
+
+            if (token.kind != TokenType::RSQBRA)
+                throw InvalidSyntax("] expected");
+            get_next_token();
+        }
+
         return n;
     }
     else if (token.kind == TokenType::STRING) {
@@ -66,6 +92,19 @@ Node Parser::primary() {
             throw InvalidSyntax("Invalid Initialization syntax");
         n.value = token.value;
         get_next_token();
+
+        if (token.kind == TokenType::LSQBRA) {
+            n.kind = NodeType::INTARR;
+            get_next_token();
+            if (token.kind != TokenType::NUMBER)
+                throw InvalidSyntax("Invalid Initialization syntax");
+            n.operators.push_back(primary());
+
+            if (token.kind != TokenType::RSQBRA)
+                throw InvalidSyntax("] expected");
+            get_next_token();
+        }
+
         return n;
     }
     else if (token.kind == TokenType::CHAR) {
@@ -75,12 +114,37 @@ Node Parser::primary() {
             throw InvalidSyntax("Invalid Initialization syntax");
         n.value = token.value;
         get_next_token();
+
+        if (token.kind == TokenType::LSQBRA) {
+            n.kind = NodeType::INTARR;
+            get_next_token();
+            if (token.kind != TokenType::NUMBER)
+                throw InvalidSyntax("Invalid Initialization syntax");
+            n.operators.push_back(primary());
+
+            if (token.kind != TokenType::RSQBRA)
+                throw InvalidSyntax("] expected");
+            get_next_token();
+        }
+
         return n;
     }
     //ПРОСТО ПЕРЕМЕННАЯ=================----------------------------
     else if (token.kind == TokenType::VAR) {
         Node n(NodeType::VAR, token.value);
         get_next_token();
+
+        if (token.kind == TokenType::LSQBRA) {
+            get_next_token();
+            if (token.kind != TokenType::NUMBER)
+                throw InvalidSyntax("Invalid Initialization syntax");
+            n.operators.push_back(primary());
+
+            if (token.kind != TokenType::RSQBRA)
+                throw InvalidSyntax("] expected");
+            get_next_token();
+        }
+
         return n;
     }
     else
@@ -354,13 +418,14 @@ Node Parser::statemant() {
         get_next_token();
 
         forNode.operators.insert(forNode.operators.end() - 1, statemant());
-        get_next_token();
+
         n.operators.push_back(forNode);
     }
 
     //раздел пустого узла
     else if (token.kind == TokenType::SEMICOLON) {
         n.kind = NodeType::EMPTY;
+        get_next_token();
     }
     //==============================================-------------------------------------------
     else if (token.kind == TokenType::LBRA) {
@@ -383,6 +448,75 @@ Node Parser::statemant() {
         get_next_token();
 
         return n;
+
+    }
+
+    else if (token.kind == TokenType::PRINT) {
+        n.kind = NodeType::PRINT;
+
+        get_next_token();
+
+        if (token.kind != TokenType::LPAR)
+            throw ParExpected("( expected");
+
+        get_next_token();
+
+        while (token.kind != TokenType::RPAR) {
+
+            if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
+                throw InvalidSyntax("Invalid print syntax");
+
+            Node temp(NodeType::EXPR);
+            temp.operators.push_back(expression());
+            n.operators.push_back(temp);
+
+            if(token.kind != TokenType::COMMA && token.kind != TokenType::RPAR)
+                throw InvalidSyntax("Invalid print syntax");
+
+            if (token.kind == TokenType::COMMA)
+                get_next_token();
+        }
+        
+        get_next_token();
+
+        if (token.kind != TokenType::SEMICOLON)
+            throw SemiliconExpected("; expected");
+
+        get_next_token();
+
+    }
+    
+    else if (token.kind == TokenType::READ) {
+        n.kind = NodeType::READ;
+
+        get_next_token();
+
+        if (token.kind != TokenType::LPAR)
+            throw ParExpected("( expected");
+
+        get_next_token();
+
+        while (token.kind != TokenType::RPAR) {
+
+            if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
+                throw InvalidSyntax("Invalid print syntax");
+
+            n.operators.push_back(primary());
+
+            if (token.kind != TokenType::COMMA && token.kind != TokenType::RPAR)
+                throw InvalidSyntax("Invalid print syntax");
+
+            if (token.kind == TokenType::COMMA)
+                get_next_token();
+        }
+
+        get_next_token();
+
+        if (token.kind != TokenType::SEMICOLON)
+            throw SemiliconExpected("; expected");
+
+        get_next_token();
+
 
     }
 
