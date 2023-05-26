@@ -21,7 +21,8 @@ void VirtualMachine::run(std::vector<std::string> program) {
             pc += 2;
         }
         if (op == OperationType::FETCHELEMENT) {
-            compute_on_element(arg, wrap(stack.top())->toInt(),[this](Obj* obj) {
+            int index = wrap(stack.top())->toInt(); stack.pop();
+            compute_on_element(arg, index,[this](Obj* obj) {
                 stack.push(obj->toStore());
             });
             pc += 2;
