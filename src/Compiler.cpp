@@ -22,6 +22,9 @@ void Compiler::compile(Node node) {
     if (processConstants(node)) {
         return;
     }
+    if (processArray(node)) {
+        return;
+    }
     else if (node.kind == NodeType::PLUS) {
         compile(node.operators[0]);
         compile(node.operators[1]);
@@ -61,6 +64,21 @@ void Compiler::compile(Node node) {
         compile(node.operators[0]);
         compile(node.operators[1]);
         gen(OperationType::NONEQUAL);
+    }
+    else if (node.kind == NodeType::PRINT) {
+        int i = 0;
+        while (i < node.operators.size()) {
+            compile(node.operators[i++]);
+            gen(OperationType::PRINT);
+        }
+    }
+    else if (node.kind == NodeType::READ) {
+        int i = 0;
+        while (i < node.operators.size()) {
+            compile(node.operators[i]);
+            gen(OperationType::READ);
+            gen(node.operators[i++].value);
+        }
     }
     else if (node.kind == NodeType::SET) {
         compile(node.operators[1]);
@@ -115,7 +133,7 @@ void Compiler::compile(Node node) {
         while (i < node.operators.size()) {
             compile(node.operators[i++]);
         }
-        // ставим метку - удаляем локальные переменные
+        // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         std::set<std::string>::iterator it = oldVars.begin();
         while (it != oldVars.end()) {
             vars.erase(*it);
@@ -146,9 +164,17 @@ void Compiler::compile(Node node) {
 
 bool Compiler::processVariables(Node& node) {
     if (node.kind == NodeType::VAR) {
-        gen(OperationType::FETCH);
-        checkNotExistsVariable(node.value);
-        gen(node.value);
+        if (node.operators.empty()) {
+            gen(OperationType::FETCH);
+            checkNotExistsVariable(node.value);
+            gen(node.value);
+        }
+        else {
+            gen(OperationType::FETCHELEMENT);
+            checkNotExistsVariable(node.value);
+            gen(node.value+node.operators[0].value);
+        }
+
         return true;
     }
     else if (node.kind == NodeType::INT) {
@@ -169,6 +195,38 @@ bool Compiler::processVariables(Node& node) {
     }
     else if (node.kind == NodeType::REAL) {
         saveVariable(node.value, VarType::REAL);
+        return true;
+    }
+    return false;
+}
+
+bool Compiler::processArray(Node& node) {
+    if (node.kind == NodeType::INTARR) {
+        gen(OperationType::FETCHARR);
+        checkExistsVariable(node.value);
+        vars.insert(node.value);
+        gen(node.operators[0].value + " INT " + node.value);
+        return true;
+    }
+    if (node.kind == NodeType::BOOLARR) {
+        gen(OperationType::FETCHARR);
+        checkExistsVariable(node.value);
+        vars.insert(node.value);
+        gen(node.operators[0].value + " BOOL " + node.value);
+        return true;
+    }
+    if (node.kind == NodeType::CHARARR) {
+        gen(OperationType::FETCHARR);
+        checkExistsVariable(node.value);
+        vars.insert(node.value);
+        gen(node.operators[0].value + " CHAR " + node.value);
+        return true;
+    }
+    if (node.kind == NodeType::REALARR) {
+        gen(OperationType::FETCHARR);
+        checkExistsVariable(node.value);
+        vars.insert(node.value);
+        gen(node.operators[0].value + " REAL " + node.value);
         return true;
     }
     return false;

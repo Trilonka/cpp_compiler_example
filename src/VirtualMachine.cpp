@@ -22,6 +22,17 @@ void VirtualMachine::run(std::vector<std::string> program) {
             stack.push(vars[arg]);
             pc += 2;
         }
+        if (op == OperationType::FETCHELEMENT) {
+            stack.push(arrays[arg]);
+            pc += 2;
+        }
+        if (op == OperationType::FETCHARR) {
+            int count = std::stoi(arg.substr(0, arg.find(' '))) - 1;
+            while (count >= 0) {
+                fetch_arr(arg.substr(arg.find(' ')+1)+std::to_string(count--), "0");
+            }
+            pc += 2;
+        }
         if (op == OperationType::UNFETCH) {
             vars.erase(arg);
             pc += 2;
@@ -29,17 +40,24 @@ void VirtualMachine::run(std::vector<std::string> program) {
         if (op == OperationType::STORE) {
             if (arg == "FETCH") {
                 if (stack.top().substr(0, stack.top().find(" ")) != vars[program[pc + 2]].substr(0, vars[program[pc + 2]].find(" "))) {
-                    std::cout << "Wrong typesss!\n";
+                    std::cout << "Wrong types!\n";
                     exit(1);
                 }
                 vars[program[pc + 2]] = stack.top();
             }
-            else if (arg == "FETCHNEW") {
+            if (arg == "FETCHNEW") {
                 if (stack.top().substr(0, stack.top().find(" ")) != program[pc + 2].substr(0, program[pc + 2].find(" "))) {
                     std::cout << "Wrong types!\n";
                     exit(1);
                 }
                 vars[program[pc + 2].substr(program[pc + 2].find(" ") + 1)] = stack.top();
+            }
+            if (arg == "FETCHELEMENT") {
+                if (stack.top().substr(0, stack.top().find(" ")) != arrays[program[pc + 2]].substr(0, arrays[program[pc + 2]].find(" "))) {
+                    std::cout << "Wrong types!" << (stack.top().substr(0, stack.top().find(" "))) << " " << arrays[program[pc + 2]].substr(0, arrays[program[pc + 2]].find(" ")) << "\n";
+                    exit(1);
+                }
+                arrays[program[pc + 2]] = stack.top();
             }
             stack.pop();
             pc += 3;
@@ -99,6 +117,18 @@ void VirtualMachine::run(std::vector<std::string> program) {
             stack.push(notEqual(first, second)->toStore());
             pc += 1;
         }
+        if (op == OperationType::PRINT) {
+            std::string valueToPrinted = stack.top(); stack.pop();
+            std::cout << wrap(valueToPrinted)->toStr() << std::endl;
+            pc += 1;
+        }
+        if (op == OperationType::READ) {
+            std::string variable = stack.top(); stack.pop();
+            std::string newValue; std::cin >> newValue;
+            vars[arg] = set(variable, newValue)->toStore();
+            pc += 2;
+
+        }
         if (op == OperationType::JZ) {
             if (isTrue(stack.top())) {
                 pc += 2;
@@ -120,16 +150,16 @@ void VirtualMachine::run(std::vector<std::string> program) {
         }
         if (op == OperationType::HALT) break;
     }
-    std::cout << "Execution finished. Vars:\n";
-
-    std::map<std::string, std::string>::iterator it;
-    for (it = vars.begin(); it != vars.end(); it++)
-    {
-        std::cout << it->first    // string (key)
-            << " : "
-            << it->second   // string's value 
-            << std::endl;
-    }
+//    std::cout << "Execution finished. Vars:\n";
+//
+//    std::map<std::string, std::string>::iterator it;
+//    for (it = vars.begin(); it != vars.end(); it++)
+//    {
+//        std::cout << it->first    // string (key)
+//            << " : "
+//            << it->second   // string's value
+//            << std::endl;
+//    }
 }
 
 void VirtualMachine::fetch_new(std::string& arg) {
@@ -138,4 +168,10 @@ void VirtualMachine::fetch_new(std::string& arg) {
     std::string value = type + " " + init_value(type);
     stack.push(value);
     vars[name] = value;
+}
+
+void VirtualMachine::fetch_arr(std::string arg, std::string default_value) {
+    std::string type = arg.substr(0, arg.find(" "));
+    std::string name = arg.substr(arg.find(" ") + 1);
+    arrays[name] = type + " 0";
 }

@@ -10,6 +10,8 @@
 
 Obj* wrap(std::string var);
 
+Obj* set(std::string var, std::string value);
+
 std::string multi_str(std::string str, int count);
 
 Obj* sum(std::string left_operand, std::string right_operand);
