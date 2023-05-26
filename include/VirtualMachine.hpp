@@ -26,7 +26,7 @@ public:
 
     void fetch_new(std::string& arg);
 
-    void fetch_arr(std::string type, int size);
+    void fetch_arr(std::string type, int size, const std::function<Obj*(VarType type)>& store_default);
 
     void store_array_element(std::string name, int index, std::string value);
 

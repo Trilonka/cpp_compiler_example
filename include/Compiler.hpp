@@ -43,7 +43,7 @@ public:
 
     void saveVariable(string varName, VarType varType);
 
-    void saveConst(string value);
+    void saveArray(Node& node, VarType type);
 
     void checkExistsVariable(string& varName);
 

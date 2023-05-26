@@ -9,6 +9,7 @@ enum class OperationType {
     FETCHNEW,
     FETCH,
     FETCHARR,
+    FETCHARRFILL,
     FETCHELEMENT,
     UNFETCH,
     STORE,

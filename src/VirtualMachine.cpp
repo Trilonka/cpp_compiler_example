@@ -28,8 +28,30 @@ void VirtualMachine::run(std::vector<std::string> program) {
             pc += 2;
         }
         if (op == OperationType::FETCHARR) {
-            int size = std::stoi(arg.substr(0, arg.find(' ')));
-            fetch_arr(arg.substr(arg.find(' ')+1), size);
+            int size = wrap(stack.top())->toInt(); stack.pop();
+            fetch_arr(arg, size, [](VarType type) -> Obj* {
+                switch (type) {
+                    case (VarType::INT): return new Int(init_value(type));
+                    case (VarType::STRING): return new Str(init_value(type));
+                    case (VarType::BOOL): return new Bool(init_value(type));
+                    case (VarType::CHAR): return new Char(init_value(type));
+                    case (VarType::REAL): return new Real(init_value(type));
+                }
+            });
+            pc += 2;
+        }
+        if (op == OperationType::FETCHARRFILL) {
+            int size = wrap(stack.top())->toInt(); stack.pop();
+            fetch_arr(arg, size, [this](VarType type) -> Obj* {
+                std::string value = stack.top(); stack.pop();
+                switch (type) {
+                    case (VarType::INT): return new Int(wrap(value )->toInt());
+                    case (VarType::STRING): return new Str(wrap(value )->toStr());
+                    case (VarType::BOOL): return new Bool(wrap(value )->toBool());
+                    case (VarType::CHAR): return new Char(wrap(value )->toChar());
+                    case (VarType::REAL): return new Real(wrap(value )->toReal());
+                }
+            });
             pc += 2;
         }
         if (op == OperationType::UNFETCH) {
@@ -159,7 +181,7 @@ void VirtualMachine::fetch_new(std::string& arg) {
     vars[name] = value;
 }
 
-void VirtualMachine::fetch_arr(std::string arg, int size) {
+void VirtualMachine::fetch_arr(std::string arg, int size,  const std::function<Obj*(VarType type)>& store_default) {
     VarType type = string_to_vartype[arg.substr(0, arg.find(' '))];
     std::string name = arg.substr(arg.find(' ') + 1);
     array_type[name] = type;
@@ -167,7 +189,7 @@ void VirtualMachine::fetch_arr(std::string arg, int size) {
         ArrayContainer<Int*>* container = new ArrayContainer<Int*>(size);
         int i = 0;
         while (i < size) {
-            container->operator[](i++) = new Int(init_value(type));
+            container->operator[](i++) = dynamic_cast<Int*>(store_default(type));
         }
         arrays[name] = container;
     }
@@ -175,7 +197,7 @@ void VirtualMachine::fetch_arr(std::string arg, int size) {
         ArrayContainer<Str*>* container = new ArrayContainer<Str*>(size);
         int i = 0;
         while (i < size) {
-            container->operator[](i++) = new Str(init_value(type));
+            container->operator[](i++) = dynamic_cast<Str*>(store_default(type));
         }
         arrays[name] = container;
     }
@@ -183,7 +205,7 @@ void VirtualMachine::fetch_arr(std::string arg, int size) {
         ArrayContainer<Bool*>* container = new ArrayContainer<Bool*>(size);
         int i = 0;
         while (i < size) {
-            container->operator[](i++) = new Bool(init_value(type));
+            container->operator[](i++) = dynamic_cast<Bool*>(store_default(type));
         }
         arrays[name] = container;
     }
@@ -191,7 +213,7 @@ void VirtualMachine::fetch_arr(std::string arg, int size) {
         ArrayContainer<Real*>* container = new ArrayContainer<Real*>(size);
         int i = 0;
         while (i < size) {
-            container->operator[](i++) = new Real(init_value(type));
+            container->operator[](i++) = dynamic_cast<Real*>(store_default(type));
         }
         arrays[name] = container;
     }
@@ -199,7 +221,7 @@ void VirtualMachine::fetch_arr(std::string arg, int size) {
         ArrayContainer<Char*>* container = new ArrayContainer<Char*>(size);
         int i = 0;
         while (i < size) {
-            container->operator[](i++) = new Char(init_value(type));
+            container->operator[](i++) = dynamic_cast<Char*>(store_default(type));
         }
         arrays[name] = container;
     }
