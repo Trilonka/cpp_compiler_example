@@ -196,7 +196,7 @@ Node Parser::primary() {
 Node Parser::multiplicator() {
     Node left = primary();
 
-    while (token.kind == TokenType::MULTI || token.kind == TokenType::DIV) {
+    while (token.kind == TokenType::MULTI || token.kind == TokenType::DIV || token.kind == TokenType::MOD) {
 
         Node n;
 
@@ -205,6 +205,9 @@ Node Parser::multiplicator() {
   
         else if (token.kind == TokenType::DIV) 
             n.kind = NodeType::DIV;
+
+        else if (token.kind == TokenType::MOD)
+            n.kind = NodeType::MOD;
             
         n.operators.push_back(left);
         get_next_token();
@@ -454,8 +457,12 @@ Node Parser::statemant() {
 
     }
     //вывод данных в поток
-    else if (token.kind == TokenType::PRINT) {
-        n.kind = NodeType::PRINT;
+    else if (token.kind == TokenType::PRINT || token.kind == TokenType::PRINTLN) {
+
+        if (token.kind == TokenType::PRINT)
+            n.kind = NodeType::PRINT;
+        else 
+            n.kind = NodeType::PRINTLN;
 
         get_next_token();
 

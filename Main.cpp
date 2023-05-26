@@ -37,7 +37,7 @@ int main() {
 
         //std::ifstream fin(argv[1]);
 
-        std::ifstream fin("C:\\Users\\1\\Desktop\\Âóç\\Programm progect\\GitHub\\cpp_compiler_example\\tests\\test_01.das");
+        std::ifstream fin("C:\\Users\\1\\Desktop\\Âóç\\Programm progect\\GitHub\\cpp_compiler_example\\tests\\test_08.das");
         if (fin)
         {
             fin >> lexer;
@@ -50,8 +50,8 @@ int main() {
         Compiler compiler;
         VirtualMachine vm;
 
-        //int i = 0; int j = 0;
-        //print(parser.parse(), i, j);
+        int i = 0; int j = 0;
+        print(parser.parse(), i, j);
 
 
         compiler.compile(parser.parse());

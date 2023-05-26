@@ -33,6 +33,7 @@ enum class TokenType {
 	MINUS,		// -
 	MULTI,		// *
 	DIV,		// /
+	MOD,		// %
 	ASSIGMENT,	// =
 	UNEQUAL,    // !=
 	EQUAL,		// ==
@@ -48,6 +49,7 @@ enum class TokenType {
 	FOR,		// for
 	WHILE,		// while
 	PRINT,		// print
+	PRINTLN,	// println
 	READ,		// read
 	OR,			// or
 	AND,		// and

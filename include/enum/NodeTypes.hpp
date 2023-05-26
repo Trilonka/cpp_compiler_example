@@ -30,6 +30,7 @@ enum class NodeType {
     MINUS,
     MULTI,
     DIV,
+    MOD,
 
     LT,
     BT,
@@ -47,6 +48,7 @@ enum class NodeType {
     THEN,//
 
     PRINT,
+    PRINTLN,
     READ,
 
     EMPTY,

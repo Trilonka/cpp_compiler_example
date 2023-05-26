@@ -134,6 +134,7 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 		if (src[i] == ",") add_token(i, TokenType::COMMA, src);
 		if (src[i] == "[") add_token(i, TokenType::LSQBRA, src);
 		if (src[i] == "]") add_token(i, TokenType::RSQBRA, src);
+		if (src[i] == "%") add_token(i, TokenType::MOD, src);
 
 		if (src[i] == "=") {
 			if (src[i - 1] == "=")
@@ -176,6 +177,7 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 	if (src[i] == "for") add_token(i, TokenType::FOR, src);
 	if (src[i] == "while") add_token(i, TokenType::WHILE, src);
 	if (src[i] == "print") add_token(i, TokenType::PRINT, src);
+	if (src[i] == "println") add_token(i, TokenType::PRINTLN, src);
 	if (src[i] == "read") add_token(i, TokenType::READ, src);
 	if (src[i] == "or") add_token(i, TokenType::OR, src);
 	if (src[i] == "and") add_token(i, TokenType::AND, src);
