@@ -3,13 +3,13 @@
 Exception::Exception(const char* s)
 {
 	str = new char[strlen(s) + 1];
-	strcpy_s(str, strlen(s) + 1, s);
+    std::strncpy(str, s, strlen(s) + 1);
 }
 
 Exception::Exception(char* s)
 {
 	str = new char[strlen(s) + 1];
-	strcpy_s(str, strlen(s) + 1, s);
+    std::strncpy(str, s, strlen(s) + 1);
 }
 
 Exception::Exception()
@@ -20,7 +20,7 @@ Exception::Exception()
 Exception::Exception(const Exception& e)
 {
 	str = new char[strlen(e.str) + 1];
-	strcpy_s(str, strlen(e.str) + 1, e.str);
+	std::strncpy(str, e.str, strlen(e.str) + 1);
 }
 
 Exception::~Exception()

@@ -19,17 +19,11 @@ enum class VarType {
     BOOL
 };
 
-class Var {
-public:
-    std::string name;
-    VarType type;
-    int address;
-    std::string value;
-};
+extern std::map<std::string, VarType> string_to_vartype;
 
-extern std::map<std::string, VarType> vartypeNamesStr;
+extern std::map<VarType, std::string> vartype_to_string;
 
-extern std::map<VarType, std::string> vartypeNames;
+std::string init_value(VarType& type);
 
 std::string init_value(std::string type_str);
 

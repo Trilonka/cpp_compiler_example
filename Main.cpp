@@ -23,17 +23,18 @@ void print(Node root, int& count, int& turn) {
     count -= 1;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 
     try
     {
-
-
-
         Lexer lexer;
-        //("int a = 1; int b = 2; for(int i = 0; i < 10; i = i + 1) a = a + b + i; int f = 12; if(a > b){ b = b + f; f = 0;}; string s = \"kek\"; for(int i = 0; i < 5; i = i + 1) {f = f - 1;}; a = a + 100;");
 
-        std::ifstream fin("../tests/calc_test_4.das");
+        if (argc < 2) {
+            std::cout << "File name required!\n";
+            exit(1);
+        }
+
+        std::ifstream fin(argv[1]);
 
         if (fin)
         {
@@ -46,9 +47,6 @@ int main() {
         Parser parser(lexer.lexems);
         Compiler compiler;
         VirtualMachine vm;
-
-        int i = 0; int j = 0;
-        print(parser.parse(), i, j);
 
         compiler.compile(parser.parse());
         vm.run(compiler.program);

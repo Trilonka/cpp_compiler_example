@@ -15,6 +15,8 @@ public:
 
     virtual bool toBool();
 
+    virtual char toChar();
+
     virtual VarType type();
 };
 

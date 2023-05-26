@@ -12,7 +12,7 @@ enum class TokenType {
 	// TYPE
 	NUMBER,			// целое отрицательное или положительное число 
 	CHARACTER,		// один символ в '_'
-	REAL,			// вещественное число вида _._  
+	REALNUMBER,		// вещественное число вида _._  
 	CONSTSTRING,	// строка в "_"
 
 	// VALUE
@@ -20,6 +20,7 @@ enum class TokenType {
 	BOOL,		// bool
 	STRING,		// string
 	CHAR,		// char
+	REAL,		// real
 
 	// SYMBOLS
 	LPAR,		// (

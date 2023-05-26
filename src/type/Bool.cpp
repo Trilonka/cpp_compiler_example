@@ -19,7 +19,7 @@ double Bool::toReal() {
 }
 
 bool Bool::toBool() {
-    if (_value != "") return true;
+    if (_value != "" && _value != "0" && _value != "0.0" && _value != "false") return true;
     return false;
 }
 

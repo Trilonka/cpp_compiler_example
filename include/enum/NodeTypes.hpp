@@ -5,24 +5,25 @@
 enum class NodeType {
     VAR,
 
-    //типы данных
+    //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     INT,
     BOOL,//
     STRING,//
     CHAR,// 4
     REAL,//
 
-    //статические массивы
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     INTARR,
     BOOLARR,
     CHARARR,
     REALARR,
 
-    //константные значения
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     CONSTINT,//6
     CONSTCHAR,//
     CONSTSTRING,//
     CONSTREAL,// 9
+    CONSTBOOL,
 
     PLUS,
     MINUS,

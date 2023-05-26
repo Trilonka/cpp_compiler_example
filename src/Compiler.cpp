@@ -11,7 +11,7 @@ void Compiler::gen(std::string operand) {
 }
 
 void Compiler::gen(OperationType operation) {
-    program.push_back(operationNames[operation]);
+    program.push_back(operation_to_string[operation]);
     programCounter++;
 }
 
@@ -75,15 +75,29 @@ void Compiler::compile(Node node) {
     else if (node.kind == NodeType::READ) {
         int i = 0;
         while (i < node.operators.size()) {
-            compile(node.operators[i]);
-            gen(OperationType::READ);
-            gen(node.operators[i++].value);
+            if (node.operators[i].operators.empty()) {
+                gen(OperationType::READ);
+                gen(node.operators[i++].value);
+            }
+            else {
+                compile(node.operators[i].operators[0]);
+                gen(OperationType::READ);
+                gen(node.operators[i++].value);
+            }
         }
     }
     else if (node.kind == NodeType::SET) {
         compile(node.operators[1]);
-        gen(OperationType::STORE);
-        compile(node.operators[0]);
+        if (node.operators[0].kind == NodeType::VAR && !node.operators[0].operators.empty()) {
+            compile(node.operators[0].operators[0]);
+            gen(OperationType::STORE);
+            gen(OperationType::FETCHELEMENT);
+            gen(node.operators[0].value);
+        }
+        else {
+            gen(OperationType::STORE);
+            compile(node.operators[0]);
+        }
     }
     else if (node.kind == NodeType::IF) {
         compile(node.operators[0]);
@@ -97,7 +111,7 @@ void Compiler::compile(Node node) {
         compile(node.operators[0]);
         gen(OperationType::JZ); int addr1 = programCounter; gen(0);
         compile(node.operators[1]);
-        gen(OperationType::JMP); int addr2 = programCounter; gen(0);
+        gen(OperationType::GOTO); int addr2 = programCounter; gen(0);
         program[addr1] = to_string(programCounter);
         compile(node.operators[2]);
         program[addr2] = to_string(programCounter);
@@ -107,7 +121,7 @@ void Compiler::compile(Node node) {
         compile(node.operators[0]);
         gen(OperationType::JZ); int addr2 = programCounter; gen(0);
         compile(node.operators[1]);
-        gen(OperationType::JMP); gen(addr1);
+        gen(OperationType::GOTO); gen(addr1);
         program[addr2] = to_string(programCounter);
     }
     else if (node.kind == NodeType::FOR) {
@@ -117,7 +131,7 @@ void Compiler::compile(Node node) {
         gen(OperationType::JZ); int addr2 = programCounter; gen(0);
         compile(node.operators[2]);
         compile(node.operators[3]);
-        gen(OperationType::JMP); gen(addr1);
+        gen(OperationType::GOTO); gen(addr1);
         program[addr2] = to_string(programCounter);
     }
     else if (node.kind == NodeType::DOWHILE) {
@@ -170,9 +184,10 @@ bool Compiler::processVariables(Node& node) {
             gen(node.value);
         }
         else {
+            compile(node.operators[0]);
             gen(OperationType::FETCHELEMENT);
             checkNotExistsVariable(node.value);
-            gen(node.value+node.operators[0].value);
+            gen(node.value);
         }
 
         return true;
@@ -205,28 +220,28 @@ bool Compiler::processArray(Node& node) {
         gen(OperationType::FETCHARR);
         checkExistsVariable(node.value);
         vars.insert(node.value);
-        gen(node.operators[0].value + " INT " + node.value);
+        gen(node.operators[0].value + " " + vartype_to_string[VarType::INT] +  " " + node.value);
         return true;
     }
     if (node.kind == NodeType::BOOLARR) {
         gen(OperationType::FETCHARR);
         checkExistsVariable(node.value);
         vars.insert(node.value);
-        gen(node.operators[0].value + " BOOL " + node.value);
+        gen(node.operators[0].value + " " + vartype_to_string[VarType::BOOL] +  " " + node.value);
         return true;
     }
     if (node.kind == NodeType::CHARARR) {
         gen(OperationType::FETCHARR);
         checkExistsVariable(node.value);
         vars.insert(node.value);
-        gen(node.operators[0].value + " CHAR " + node.value);
+        gen(node.operators[0].value + " " + vartype_to_string[VarType::CHAR] +  " " + node.value);
         return true;
     }
     if (node.kind == NodeType::REALARR) {
         gen(OperationType::FETCHARR);
         checkExistsVariable(node.value);
         vars.insert(node.value);
-        gen(node.operators[0].value + " REAL " + node.value);
+        gen(node.operators[0].value + " " + vartype_to_string[VarType::REAL] +  " " + node.value);
         return true;
     }
     return false;
@@ -235,22 +250,27 @@ bool Compiler::processArray(Node& node) {
 bool Compiler::processConstants(Node& node) {
     if (node.kind == NodeType::CONSTINT) {
         gen(OperationType::PUSH);
-        gen("INT " + node.value);
-        return true;
-    }
-    if (node.kind == NodeType::CONSTCHAR) {
-        gen(OperationType::PUSH);
-        gen("CHAR " + node.value);
+        gen(vartype_to_string[VarType::INT] + " " + node.value);
         return true;
     }
     if (node.kind == NodeType::CONSTREAL) {
         gen(OperationType::PUSH);
-        gen("REAL " + node.value);
+        gen(vartype_to_string[VarType::REAL] + " " + node.value);
         return true;
     }
     if (node.kind == NodeType::CONSTSTRING) {
         gen(OperationType::PUSH);
-        gen("STRING " + node.value);
+        gen(vartype_to_string[VarType::STRING] + " " + node.value);
+        return true;
+    }
+    if (node.kind == NodeType::CONSTCHAR) {
+        gen(OperationType::PUSH);
+        gen(vartype_to_string[VarType::CHAR] + " " + node.value);
+        return true;
+    }
+    if (node.kind == NodeType::CONSTBOOL) {
+        gen(OperationType::PUSH);
+        gen(vartype_to_string[VarType::BOOL] + " " + node.value);
         return true;
     }
     return false;
@@ -261,7 +281,7 @@ void Compiler::saveVariable(std::string varName, VarType varType) {
     checkExistsVariable(varName);
     vars.insert(varName);
     // vars[varName] = {varName, varType, programCounter, ""};
-    gen(vartypeNames[varType] + " " + varName);
+    gen(vartype_to_string[varType] + " " + varName);
 }
 
 void Compiler::saveConst(std::string value) {

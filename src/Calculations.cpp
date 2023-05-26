@@ -1,8 +1,8 @@
 #include "Calculations.hpp"
 
 Obj* wrap(std::string var) {
-    VarType type = vartypeNamesStr[var.substr(0, var.find(" "))];
-    std::string value = var.substr(var.find(" ") + 1);
+    VarType type = string_to_vartype[var.substr(0, var.find(' '))];
+    std::string value = var.substr(var.find(' ') + 1);
     if (type == VarType::INT) {
         return new Int(value);
     }
@@ -14,11 +14,14 @@ Obj* wrap(std::string var) {
     }
     if (type == VarType::STRING) {
         return new Str(value);
+    }
+    if (type == VarType::CHAR) {
+        return new Char(value);
     }
 }
 
 Obj* set(std::string var, std::string value) {
-    VarType type = vartypeNamesStr[var.substr(0, var.find(" "))];
+    VarType type = string_to_vartype[var.substr(0, var.find(' '))];
     if (type == VarType::STRING) {
         return new Str(value);
     }
@@ -26,10 +29,14 @@ Obj* set(std::string var, std::string value) {
         return new Int(value);
     }
     if (type == VarType::BOOL) {
+
         return new Bool(value);
     }
     if (type == VarType::REAL) {
         return new Real(value);
+    }
+    if (type == VarType::CHAR) {
+        return new Char(value);
     }
 }
 
@@ -46,7 +53,7 @@ bool isTrue(std::string logical_operand) {
     return logical->toBool();
 }
 
-Obj* sum(std::string left_operand, std::string right_operand) { // +
+Obj* sum(std::string left_operand, std::string right_operand) {
     Obj* left = wrap(left_operand);
     Obj* right = wrap(right_operand);
 
@@ -63,17 +70,20 @@ Obj* sum(std::string left_operand, std::string right_operand) { // +
     if (left->type() == VarType::INT || right->type() == VarType::INT) {
         return new Int(left->toInt() + right->toInt());
     }
+    if (left->type() == VarType::CHAR || right->type() == VarType::CHAR) {
+        return new Char(left->toInt() + right->toInt());
+    }
 
     std::cout << "Type is not supported.\n";
     exit(1);
 }
 
-Obj* sub(std::string left_operand, std::string right_operand) { // -
+Obj* sub(std::string left_operand, std::string right_operand) {
     Obj* left = wrap(left_operand);
     Obj* right = wrap(right_operand);
 
     if (left->type() == VarType::STRING || right->type() == VarType::STRING) {
-        std::cout << "Operation (-) for [str] is not allowed.\n";
+        std::cout << "Operation (-) for [Str] is not allowed.\n";
         exit(1);
     }
     if (left->type() == VarType::REAL || right->type() == VarType::REAL) {
@@ -86,12 +96,15 @@ Obj* sub(std::string left_operand, std::string right_operand) { // -
     if (left->type() == VarType::INT || right->type() == VarType::INT) {
         return new Int(left->toInt() - right->toInt());
     }
+    if (left->type() == VarType::CHAR || right->type() == VarType::CHAR) {
+        return new Char(left->toInt() - right->toInt());
+    }
 
     std::cout << "Type not supported.\n";
     exit(1);
 }
 
-Obj* mul(std::string left_operand, std::string right_operand) { // *
+Obj* mul(std::string left_operand, std::string right_operand) {
     Obj* left = wrap(left_operand);
     Obj* right = wrap(right_operand);
 
@@ -100,6 +113,10 @@ Obj* mul(std::string left_operand, std::string right_operand) { // *
     }
     if (left->type() == VarType::INT && right->type() == VarType::STRING) {
         return new Str(multi_str(right->toStr(), left->toInt()));
+    }
+    if (left->type() == VarType::STRING && right->type() == VarType::STRING) {
+        std::cout << "Operation (*) for [Str] is not allowed.\n";
+        exit(1);
     }
     if (left->type() == VarType::REAL || right->type() == VarType::REAL) {
         return new Real(left->toReal() * right->toReal());
@@ -111,17 +128,21 @@ Obj* mul(std::string left_operand, std::string right_operand) { // *
     if (left->type() == VarType::INT || right->type() == VarType::INT) {
         return new Int(left->toInt() * right->toInt());
     }
+    if (left->type() == VarType::CHAR || right->type() == VarType::CHAR) {
+        std::cout << "Operation (*) for [Char] is not allowed.\n";
+        exit(1);
+    }
 
     std::cout << "Type not supported.\n";
     exit(1);
 }
 
-Obj* div(std::string left_operand, std::string right_operand) { // /
+Obj* div(std::string left_operand, std::string right_operand) {
     Obj* left = wrap(left_operand);
     Obj* right = wrap(right_operand);
 
     if (left->type() == VarType::STRING || right->type() == VarType::STRING) {
-        std::cout << "Operation (/) for [str] is not allowed.\n";
+        std::cout << "Operation (/) for [Str] is not allowed.\n";
         exit(1);
     }
     if (left->type() == VarType::REAL || right->type() == VarType::REAL) {
@@ -133,6 +154,10 @@ Obj* div(std::string left_operand, std::string right_operand) { // /
     }
     if (left->type() == VarType::INT || right->type() == VarType::INT) {
         return new Int(left->toInt() / right->toInt());
+    }
+    if (left->type() == VarType::CHAR || right->type() == VarType::CHAR) {
+        std::cout << "Operation (/) for [Char] is not allowed.\n";
+        exit(1);
     }
 
     std::cout << "Type not supported.\n";
@@ -154,7 +179,10 @@ Obj* lessThen(std::string left_operand, std::string right_operand) {
         exit(1);
     }
     if (left->type() == VarType::INT || right->type() == VarType::INT) {
-        return new Int(left->toInt() < right->toInt());
+        return new Bool(left->toInt() < right->toInt());
+    }
+    if (left->type() == VarType::CHAR || right->type() == VarType::CHAR) {
+        return new Bool(left->toInt() < right->toInt());
     }
 
     std::cout << "Type not supported.\n";
@@ -176,7 +204,10 @@ Obj* biggerThen(std::string left_operand, std::string right_operand) {
         exit(1);
     }
     if (left->type() == VarType::INT || right->type() == VarType::INT) {
-        return new Int(left->toInt() > right->toInt());
+        return new Bool(left->toInt() > right->toInt());
+    }
+    if (left->type() == VarType::CHAR || right->type() == VarType::CHAR) {
+        return new Bool(left->toInt() > right->toInt());
     }
 
     std::cout << "Type not supported.\n";
