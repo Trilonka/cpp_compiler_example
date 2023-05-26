@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-real a = 1;
-=======
 int a = 1; 
 
 if(a < 2) 
@@ -25,4 +22,3 @@ int c = 1;
 
 while(c < 5)
 	c = c + 1;
->>>>>>> 5673dfa8c168401c91a1c266fd8d56ddaa1b094c
