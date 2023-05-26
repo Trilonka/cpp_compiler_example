@@ -51,6 +51,8 @@ public:
     //очередь выполн€емых поддеревьев в различных statemant (операторах)
     Node then();
 
+    void arrayInit(Node &n);
+
     //–аздел созани€ оператора
     Node statemant();
 

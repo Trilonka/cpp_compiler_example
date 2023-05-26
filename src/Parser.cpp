@@ -6,6 +6,61 @@ Parser::Parser(std::vector<Token> tokens) {
     this->tokens.push_back(EOFF);
 }
 
+void Parser::arrayInit(Node &n) {
+
+    if (n.kind == NodeType::INT)
+        n.kind = NodeType::INTARR;
+    else if (n.kind == NodeType::BOOL)
+        n.kind = NodeType::BOOLARR;
+    else if (n.kind == NodeType::REAL)
+        n.kind = NodeType::REALARR;
+    else if (n.kind == NodeType::CHAR)
+        n.kind = NodeType::CHARARR;
+
+    get_next_token();
+
+    if (token.kind == TokenType::RSQBRA) {
+        get_next_token();
+        if (token.kind != TokenType::LBRA)
+            throw InvalidSyntax("Invalid Initialization syntax");
+        get_next_token();
+
+        Node temp(NodeType::CONSTINT);
+        n.operators.push_back(temp);
+
+        int count = 0;
+
+        while (token.kind != TokenType::RBRA) {
+            count += 1;
+            if (token.kind == TokenType::EOFF) //скобка не закрылась а код закончился
+                throw InvalidSyntax("Invalid Initialization syntax");
+
+            Node temp2(NodeType::EXPR);
+            temp2.operators.push_back(expression());
+            n.operators.push_back(temp2);
+
+            if (token.kind != TokenType::COMMA && token.kind != TokenType::RBRA)
+                throw InvalidSyntax("Invalid Initialization syntax");
+
+            if (token.kind == TokenType::COMMA)
+                get_next_token();
+        }
+
+        n.operators[0].value = std::to_string(count);
+    }
+    else {
+        if (token.kind != TokenType::NUMBER && token.kind != TokenType::VAR && token.kind != TokenType::LPAR)
+            throw InvalidSyntax("Invalid Initialization syntax");
+
+        n.operators.push_back(expression());
+
+        if (token.kind != TokenType::RSQBRA)
+            throw InvalidSyntax("] expected");
+    }
+    
+    get_next_token();
+}
+
 //��������� ��������� - ��������� 1
 Node Parser::primary() {
 
@@ -19,7 +74,7 @@ Node Parser::primary() {
         get_next_token();
         return n;
     }
-    //����������� ��������================------------------------
+    //константные значения================------------------------
     else if (token.kind == TokenType::NUMBER) {
         Node n(NodeType::CONSTINT, token.value);
         get_next_token();
@@ -49,8 +104,10 @@ Node Parser::primary() {
         n.value = token.value;
         get_next_token();
 
+        
         if (token.kind == TokenType::LSQBRA) {
-            n.kind = NodeType::INTARR;
+            arrayInit(n);
+            /*n.kind = NodeType::INTARR;
             get_next_token();
             if(token.kind != TokenType::NUMBER && token.kind != TokenType::VAR && token.kind != TokenType::LPAR)
                 throw InvalidSyntax("Invalid Initialization syntax");
@@ -58,7 +115,7 @@ Node Parser::primary() {
             
             if (token.kind != TokenType::RSQBRA)
                 throw InvalidSyntax("] expected");
-            get_next_token();
+            get_next_token();*/
         }
 
         return n;
@@ -71,17 +128,8 @@ Node Parser::primary() {
         n.value = token.value;
         get_next_token();
 
-        if (token.kind == TokenType::LSQBRA) {
-            n.kind = NodeType::BOOLARR;
-            get_next_token();
-            if (token.kind != TokenType::NUMBER && token.kind != TokenType::VAR && token.kind != TokenType::LPAR)
-                throw InvalidSyntax("Invalid Initialization syntax");
-            n.operators.push_back(expression());
-
-            if (token.kind != TokenType::RSQBRA)
-                throw InvalidSyntax("] expected");
-            get_next_token();
-        }
+        if (token.kind == TokenType::LSQBRA) 
+            arrayInit(n);
 
         return n;
     }
@@ -93,17 +141,8 @@ Node Parser::primary() {
         n.value = token.value;
         get_next_token();
 
-        if (token.kind == TokenType::LSQBRA) {
-            n.kind = NodeType::REALARR;
-            get_next_token();
-            if(token.kind != TokenType::NUMBER && token.kind != TokenType::VAR && token.kind != TokenType::LPAR)
-                throw InvalidSyntax("Invalid Initialization syntax");
-            n.operators.push_back(expression());
-
-            if (token.kind != TokenType::RSQBRA)
-                throw InvalidSyntax("] expected");
-            get_next_token();
-        }
+        if (token.kind == TokenType::LSQBRA)
+            arrayInit(n);
 
         return n;
     }
@@ -125,17 +164,8 @@ Node Parser::primary() {
         n.value = token.value;
         get_next_token();
 
-        if (token.kind == TokenType::LSQBRA) {
-            n.kind = NodeType::CHARARR;
-            get_next_token();
-            if (token.kind != TokenType::NUMBER && token.kind != TokenType::VAR && token.kind != TokenType::LPAR)
-                throw InvalidSyntax("Invalid Initialization syntax");
-            n.operators.push_back(expression());
-
-            if (token.kind != TokenType::RSQBRA)
-                throw InvalidSyntax("] expected");
-            get_next_token();
-        }
+        if (token.kind == TokenType::LSQBRA) 
+            arrayInit(n);
 
         return n;
     }

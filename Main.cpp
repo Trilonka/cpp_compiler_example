@@ -50,8 +50,8 @@ int main() {
         Compiler compiler;
         VirtualMachine vm;
 
-        int i = 0; int j = 0;
-        print(parser.parse(), i, j);
+        //int i = 0; int j = 0;
+        //print(parser.parse(), i, j);
 
 
         compiler.compile(parser.parse());
