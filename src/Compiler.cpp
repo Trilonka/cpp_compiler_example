@@ -217,34 +217,40 @@ bool Compiler::processVariables(Node& node) {
 
 bool Compiler::processArray(Node& node) {
     if (node.kind == NodeType::INTARR) {
-        gen(OperationType::FETCHARR);
-        checkExistsVariable(node.value);
-        vars.insert(node.value);
-        gen(node.operators[0].value + " " + vartype_to_string[VarType::INT] +  " " + node.value);
+        saveArray(node, VarType::INT);
         return true;
     }
     if (node.kind == NodeType::BOOLARR) {
-        gen(OperationType::FETCHARR);
-        checkExistsVariable(node.value);
-        vars.insert(node.value);
-        gen(node.operators[0].value + " " + vartype_to_string[VarType::BOOL] +  " " + node.value);
+        saveArray(node, VarType::BOOL);
         return true;
     }
     if (node.kind == NodeType::CHARARR) {
-        gen(OperationType::FETCHARR);
-        checkExistsVariable(node.value);
-        vars.insert(node.value);
-        gen(node.operators[0].value + " " + vartype_to_string[VarType::CHAR] +  " " + node.value);
+        saveArray(node, VarType::CHAR);
         return true;
     }
     if (node.kind == NodeType::REALARR) {
-        gen(OperationType::FETCHARR);
-        checkExistsVariable(node.value);
-        vars.insert(node.value);
-        gen(node.operators[0].value + " " + vartype_to_string[VarType::REAL] +  " " + node.value);
+        saveArray(node, VarType::REAL);
         return true;
     }
     return false;
+}
+
+void Compiler::saveArray(Node &node, VarType type) {
+    if (node.operators.size() > 1) {
+        int i = node.operators.size()-1;
+        while (i > 0) {
+            compile(node.operators[i--]);
+        }
+        compile(node.operators[0]);
+        gen(OperationType::FETCHARRFILL);
+    }
+    else {
+        compile(node.operators[0]);
+        gen(OperationType::FETCHARR);
+    }
+    checkExistsVariable(node.value);
+    vars.insert(node.value);
+    gen(vartype_to_string[type] +  " " + node.value);
 }
 
 bool Compiler::processConstants(Node& node) {
@@ -280,13 +286,7 @@ void Compiler::saveVariable(std::string varName, VarType varType) {
     gen(OperationType::FETCHNEW);
     checkExistsVariable(varName);
     vars.insert(varName);
-    // vars[varName] = {varName, varType, programCounter, ""};
     gen(vartype_to_string[varType] + " " + varName);
-}
-
-void Compiler::saveConst(std::string value) {
-    gen(OperationType::PUSH);
-    gen(value);
 }
 
 void Compiler::checkExistsVariable(string& varName) {
