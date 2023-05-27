@@ -30,14 +30,14 @@ int main() {
     {
         Lexer lexer;
 
-        //if (argc < 2) {
-            //std::cout << "File name required!\n";
-            //exit(1);
-        //}
+        if (argc < 2) {
+            std::cout << "File name required!\n";
+            exit(1);
+        }
 
-        //std::ifstream fin(argv[1]);
+        std::ifstream fin(argv[1]);
 
-        std::ifstream fin("C:\\Users\\1\\Desktop\\Âóç\\Programm progect\\GitHub\\cpp_compiler_example\\tests\\test_08.das");
+        //std::ifstream fin("C:\\Users\\1\\Desktop\\Ã‚Ã³Ã§\\Programm progect\\GitHub\\cpp_compiler_example\\tests\\test_08.das");
         if (fin)
         {
             fin >> lexer;
