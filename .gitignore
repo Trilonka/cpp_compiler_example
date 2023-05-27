@@ -1,0 +1,17 @@
+.vscode
+
+*.exe
+
+*.sln
+
+*.vcxproj
+
+*.vcxproj.filters
+
+*.vcxproj.user
+
+/x64
+
+/.vs
+
+.idea
