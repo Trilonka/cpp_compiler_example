@@ -14,7 +14,13 @@
 
 Прежде чем запустить свою первую программу на Anthon, Вам необходимо установить компилятор. Обсудим, как это сделать. 
 
-Скачивайте deb пакет на свою линуксоидную arm64 машину и ставьте его командой
+Скачивайте deb пакет на свою линуксоидную arm64 машину:
+```bash
+sudo apt install wget
+wget https://github.com/Trilonka/cpp_compiler_example/releases/download/V1.0-1/anthonlang_1.0-1_arm64.deb
+```
+
+И извлекайте его (распаповка на*й):
 ```bash
 dpkg -i anthonlang_1.0-1_arm64.deb
 ```
