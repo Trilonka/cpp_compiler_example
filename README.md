@@ -1,3 +1,7 @@
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=B42ddIgtTGs"><img src="https://i.ibb.co/3myjWpn/compiler-logo.jpg" alt="compiler-logo" border="0"></a>
+</div>
+
 # The Anthon programming language #
 
 ## Описание языка ##
