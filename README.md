@@ -20,7 +20,7 @@ sudo apt install wget
 wget https://github.com/Trilonka/cpp_compiler_example/releases/download/V1.0-1/anthonlang_1.0-1_arm64.deb
 ```
 
-И извлекайте его (распаповка на*й):
+И извлекайте его (распаковка на*й):
 ```bash
 dpkg -i anthonlang_1.0-1_arm64.deb
 ```
