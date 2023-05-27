@@ -9,12 +9,12 @@ std::string Bool::toStr() {
 }
 
 int Bool::toInt() {
-    if (_value != "") return 1;
+    if (_value != "" && _value != "0" && _value != "0.0" && _value != "false") return 1;
     return 0;
 }
 
 double Bool::toReal() {
-    if (_value != "") return 1.0;
+    if (_value != "" && _value != "0" && _value != "0.0" && _value != "false") return 1.0;
     return 0.0;
 }
 

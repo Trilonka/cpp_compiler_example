@@ -188,11 +188,10 @@ void Lexer::kind_token(int i, std::vector<std::string>& src)
 
 std::istream& operator >>(std::istream& ustream, Lexer& L)
 {
-	std::string code;
 	while (!ustream.eof()) {
+        std::string code;
 		ustream >> code;
 		L.source.append(code);
-		//std::cout << code;
 		L.source.append(" ");
 	}
 	return ustream;
