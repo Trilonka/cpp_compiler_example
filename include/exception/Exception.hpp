@@ -5,6 +5,7 @@
 #include <exception>
 #include <string>
 #include <iostream>
+#include <cstring>
 
 class Exception : public std::exception
 {
