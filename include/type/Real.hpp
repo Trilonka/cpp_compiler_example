@@ -5,6 +5,8 @@
 #define _TYPE_REAL
 
 #include "Obj.hpp"
+#include <sstream>
+#include <iomanip>
 
 class Real : public Obj {
 public:

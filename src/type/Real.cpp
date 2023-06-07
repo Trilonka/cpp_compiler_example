@@ -10,7 +10,11 @@ Real::Real(std::string _value) : Obj(_value) {
     }
 }
 
-Real::Real(double _value) : Obj(std::to_string(_value)) {}
+Real::Real(double _value) : Obj(std::to_string(_value)) {
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(15) << _value;
+    this->_value = ss.str();
+}
 
 bool Real::toBool() {
     if (_value == "0.0") return false;
