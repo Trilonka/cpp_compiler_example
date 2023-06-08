@@ -1,15 +1,9 @@
-int a[10];
+real a[10];
 
-a[0] = 2;
-a[1] = 1;
-a[2] = 13;
-a[3] = 3;
-a[4] = -10;
-a[5] = 6;
-a[6] = 3;
-a[7] = 1;
-a[8] = 0;
-a[9] = 100;
+print("enter 10 real numbers: ");
+
+for(int i = 0; i < 10; i = i + 1)
+	read(a[i]);
 
 for(int i = 0; i < 9; i = i + 1)
 	for(int j = 0; j < 9; j = j + 1){
@@ -21,5 +15,7 @@ for(int i = 0; i < 9; i = i + 1)
 		
 	};
 
+println("sorted 10 real numbers: ");
+
 for(int i = 0; i < 10; i = i + 1)
-	println(a[i]);
+	print(a[i], " ");
