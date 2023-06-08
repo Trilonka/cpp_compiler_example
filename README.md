@@ -275,7 +275,7 @@ while (i > 0) {
 
 В папке 'tests' вы можете обнаружить несколько примеров рабочих программ. Рассмотрим несколько из них.
 
-'test_01.das'
+test_01.das
 
 ```
 real a[10];
@@ -331,6 +331,65 @@ println("sorted 10 real numbers: ");
 for(int i = 0; i < 10; i = i + 1)
 	print(a[i], " ");
 ```
+
+test_10.das
+
+В данном тесте рассматривается алгоритм бинарного возведения в степень.
+
+```
+int number;
+int power;
+
+print("enter number to power: ");
+read(number);
+
+print("enter power: ");
+read(power);
+
+int res = 1;
+
+print(number, " in power ", power , " is :");
+
+while (power > 0) {
+	if (power % 2 == 1)
+		res = res * number;
+	number = number * number;
+	power = power / 2;
+}
+
+print(res);
+```
+В строках ниже объявляются переменные ```number``` - число для возведения в степень, и ```power``` - степень в которую число будет возведено. Далее в кольсоль вводятся сообщения, сообщающие пользователю о том, какое число нужно ввести и происходит считывание соответсвующих переменных из консоли.
+
+```
+int number;
+int power;
+
+print("enter number to power: ");
+read(number);
+
+print("enter power: ");
+read(power);
+```
+Далее инициализируется результурующая переменная ```res```. Заранее выводится сообщение 'число number в степени ```power``` это:' и начинается расчет резултрующей переменной с помощью алгоритма бинарного возведения в степенью
+
+```
+int res = 1;
+
+print(number, " in power ", power , " is :");
+
+while (power > 0) {
+	if (power % 2 == 1)
+		res = res * number;
+	number = number * number;
+	power = power / 2;
+}
+```
+В заключении выводится ответ на задачу:
+```
+print(res);
+```
+
 ### Ошибки ###
 
 1) использование нашего компилятора не в учебных целях
